@@ -1,0 +1,89 @@
+openapi: 3.0.4
+info:
+  title: Jobly API
+  description: |-
+    This service will be used to manage the Jobly application.
+  version: 1.0.0
+servers:
+  - url: https://jobly.com/api/v1
+paths:
+  /temp:
+    get:
+      summary: Temporary endpoint
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: This is a temporary endpoint
+components:
+  schemas:
+    DateTime:
+      type: string
+      format: date-time
+      example: '2023-10-01T12:00:00Z'
+
+    BadRequestError:
+      type: object
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/DateTime'
+        status:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Invalid input data
+
+    UnauthorizedError:
+      type: object
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/DateTime'
+        status:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: User is unauthorized to access this resource
+
+    ForbiddenError:
+      type: object
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/DateTime'
+        status:
+          type: integer
+          example: 403
+        message:
+          type: string
+          example: User is forbidden from accessing this resource
+
+    NotFoundError:
+      type: object
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/DateTime'
+        status:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Resource not found
+
+    InternalServerError:
+      type: object
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/DateTime'
+        status:
+          type: integer
+          example: 500
+        message:
+          type: string
+          example: An unexpected error occurred on the server
