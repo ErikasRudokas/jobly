@@ -29,7 +29,6 @@ public class UserCvEntity {
     private String title;
 
     @Column(name = "FILE_TYPE", nullable = false)
-    @Size(max = 10, message = "File type must be at most 10 characters long")
     @Enumerated(EnumType.STRING)
     private FileType fileType;
 
@@ -37,7 +36,6 @@ public class UserCvEntity {
     private byte[] fileData;
 
     @Column(name = "STATUS", nullable = false)
-    @Size(max = 20, message = "Status must be at most 20 characters long")
     @Enumerated(EnumType.STRING)
     private CvStatus status;
 

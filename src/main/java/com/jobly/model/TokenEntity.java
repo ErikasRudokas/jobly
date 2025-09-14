@@ -29,7 +29,6 @@ public class TokenEntity {
     private String token;
 
     @Column(name = "TOKEN_TYPE", nullable = false)
-    @Size(max = 20, message = "Token type must be at most 20 characters long")
     @Enumerated(EnumType.STRING)
     private TokenType tokenType;
 
