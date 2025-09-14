@@ -25,7 +25,6 @@ public class ApplicationEntity {
     private Long id;
 
     @Column(name = "STATUS", nullable = false)
-    @Size(max = 20, message = "Status must be at most 20 characters long")
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 

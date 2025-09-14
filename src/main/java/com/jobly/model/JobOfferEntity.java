@@ -46,7 +46,6 @@ public class JobOfferEntity {
     private Integer yearsOfExperience;
 
     @Column(name = "WORK_TYPE", nullable = false)
-    @Size(max = 20, message = "Work type must be at most 20 characters long")
     @Enumerated(EnumType.STRING)
     private WorkType workType;
 
@@ -64,7 +63,6 @@ public class JobOfferEntity {
     private String contactPhone;
 
     @Column(name = "STATUS", nullable = false)
-    @Size(max = 20, message = "Status must be at most 20 characters long")
     @Enumerated(EnumType.STRING)
     private JobOfferStatus status;
 

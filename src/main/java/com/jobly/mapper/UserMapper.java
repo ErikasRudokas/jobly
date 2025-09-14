@@ -1,0 +1,32 @@
+package com.jobly.mapper;
+
+import com.jobly.enums.Role;
+import com.jobly.gen.model.UserRegisterRequest;
+import com.jobly.gen.model.UserRegisterResponse;
+import com.jobly.model.UserEntity;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class UserMapper {
+
+    public static UserEntity toUserEntityFromRegisterRequest(UserRegisterRequest registerRequest) {
+        return UserEntity.builder()
+                .firstName(registerRequest.getFirstName())
+                .lastName(registerRequest.getLastName())
+                .username(registerRequest.getUsername())
+                .email(registerRequest.getEmail())
+                .role(Role.USER)
+                .build();
+    }
+
+    public static UserRegisterResponse toUserRegisterResponse(UserEntity userEntity) {
+        return UserRegisterResponse.builder()
+                .id(userEntity.getId())
+                .firstName(userEntity.getFirstName())
+                .lastName(userEntity.getLastName())
+                .username(userEntity.getUsername())
+                .email(userEntity.getEmail())
+                .build();
+    }
+}

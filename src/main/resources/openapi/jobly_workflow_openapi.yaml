@@ -10,6 +10,8 @@ paths:
   /temp:
     get:
       summary: Temporary endpoint
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Successful response
@@ -21,69 +23,313 @@ paths:
                   message:
                     type: string
                     example: This is a temporary endpoint
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags:
+        - User Authentication
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegisterRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegisterResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestMessage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '409':
+            description: Conflict
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ConflictMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
+  /auth/login:
+    post:
+      summary: User login
+      tags:
+        - User Authentication
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginRequest'
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLoginResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestMessage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      tags:
+        - User Authentication
+      operationId: refreshToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshTokenResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestMessage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     DateTime:
       type: string
       format: date-time
       example: '2023-10-01T12:00:00Z'
 
-    BadRequestError:
+    BadRequestMessage:
       type: object
       properties:
-        timestamp:
-          $ref: '#/components/schemas/DateTime'
         status:
           type: integer
           example: 400
+        timestamp:
+          $ref: '#/components/schemas/DateTime'
         message:
           type: string
           example: Invalid input data
 
-    UnauthorizedError:
+    UnauthorizedMessage:
       type: object
       properties:
-        timestamp:
-          $ref: '#/components/schemas/DateTime'
         status:
           type: integer
           example: 401
+        timestamp:
+          $ref: '#/components/schemas/DateTime'
         message:
           type: string
           example: User is unauthorized to access this resource
 
-    ForbiddenError:
+    ForbiddenMessage:
       type: object
       properties:
-        timestamp:
-          $ref: '#/components/schemas/DateTime'
         status:
           type: integer
           example: 403
+        timestamp:
+          $ref: '#/components/schemas/DateTime'
         message:
           type: string
           example: User is forbidden from accessing this resource
 
-    NotFoundError:
+    NotFoundMessage:
       type: object
       properties:
-        timestamp:
-          $ref: '#/components/schemas/DateTime'
         status:
           type: integer
           example: 404
+        timestamp:
+          $ref: '#/components/schemas/DateTime'
         message:
           type: string
           example: Resource not found
 
-    InternalServerError:
+    ConflictMessage:
       type: object
       properties:
+        status:
+          type: integer
+          example: 409
         timestamp:
           $ref: '#/components/schemas/DateTime'
+        message:
+          type: string
+          example: Resource already exists
+
+    InternalServerErrorMessage:
+      type: object
+      properties:
         status:
           type: integer
           example: 500
+        timestamp:
+          $ref: '#/components/schemas/DateTime'
         message:
           type: string
           example: An unexpected error occurred on the server
+
+    UserRegisterRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: John
+          maxLength: 20
+        lastName:
+          type: string
+          example: Doe
+          maxLength: 20
+        username:
+          type: string
+          example: john.doe
+          maxLength: 32
+        email:
+          type: string
+          format: email
+          example: john.doe@gmail.com
+        password:
+          type: string
+          format: password
+          example: StrongP@ssw0rd!
+          minLength: 8
+          maxLength: 64
+
+    UserRegisterResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        username:
+          type: string
+          example: john.doe
+        email:
+          type: string
+          format: email
+
+    UserLoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: john.doe@gmail.com
+        password:
+          type: string
+          format: password
+          example: StrongP@ssw0rd!
+          minLength: 8
+          maxLength: 64
+
+    UserLoginResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+    RefreshTokenRequest:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+    RefreshTokenResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
