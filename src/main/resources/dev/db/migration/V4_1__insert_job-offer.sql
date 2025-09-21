@@ -1,0 +1,18 @@
+INSERT INTO JOB_OFFERS (TITLE, DESCRIPTION, COMPANY, SALARY, YEARS_OF_EXPERIENCE,
+                        WORK_TYPE, LOCATION, CONTACT_EMAIL, CONTACT_PHONE,
+                        STATUS, CREATED_AT, UPDATED_AT, CATEGORY_ID, CREATOR_ID)
+VALUES ('Junior Java Developer', 'We are looking for a passionate Junior Java Developer to join our IT team.',
+        'TechCorp', 50000.00, 1, 'ON_SITE', 'New York, NY', 'hr@techcorp.com', '+1234567890', 'OPEN',
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 1),
+       ('Frontend Engineer', 'Seeking a Frontend Engineer skilled in React and TypeScript.', 'Innovatech', 55000.00, 2,
+        'ON_SITE', 'San Francisco, CA', 'jobs@innovatech.com', '+1987654321', 'OPEN', CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP, 1, 1),
+       ('Backend Developer', 'Backend Developer needed to work on microservices and APIs.', 'SoftSolutions', 60000.00,
+        3, 'ON_SITE', 'Austin, TX', 'careers@softsolutions.com', '+1123456789', 'OPEN', CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP, 1, 1),
+       ('Full Stack Developer', 'Full Stack Developer to handle both frontend and backend tasks.', 'DevWorks', 65000.00,
+        2, 'ON_SITE', 'Seattle, WA', 'talent@devworks.com', '+1098765432', 'OPEN', CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP, 1, 1),
+       ('IT Support Specialist', 'Provide IT support and troubleshooting for company systems.', 'NetTech', 45000.00, 1,
+        'ON_SITE', 'Chicago, IL', 'support@nettech.com', '+1230984567', 'OPEN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+        1, 1);

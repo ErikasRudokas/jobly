@@ -1,10 +1,13 @@
 package com.jobly.exception;
 
+import com.jobly.exception.general.ForbiddenException;
 import com.jobly.exception.general.NotFoundException;
 import com.jobly.exception.specific.*;
 import com.jobly.gen.model.*;
 import com.jobly.util.ExceptionHandlerUtils;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -16,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({InvalidCredentialsException.class})
+    @ExceptionHandler({InvalidCredentialsException.class, BadRequestException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<BadRequestMessage> handleBadRequestExceptions(Exception ex) {
         log.error(ex.getMessage());
@@ -24,7 +27,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(badRequestMessage, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({IncorrectTokenUsageException.class})
+    @ExceptionHandler({IncorrectTokenUsageException.class, ExpiredJwtException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<UnauthorizedMessage> handleUnauthorizedExceptions(Exception ex) {
         log.error(ex.getMessage());
@@ -40,7 +43,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(notFoundMessage, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({AuthorizationDeniedException.class})
+    @ExceptionHandler({AuthorizationDeniedException.class, ForbiddenException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<ForbiddenMessage> handleForbiddenExceptions(Exception ex) {
         log.error(ex.getMessage());

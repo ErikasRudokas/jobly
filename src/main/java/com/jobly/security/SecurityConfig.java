@@ -8,6 +8,7 @@ import com.jobly.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,7 +44,9 @@ public class SecurityConfig {
         http.
                 csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(authenticatedEndpoints).authenticated()
                         .requestMatchers(permittedEndpoints).permitAll()
+                        .requestMatchers(HttpMethod.GET, permittedGetEndpoints).permitAll()
                         .anyRequest().authenticated()
                 )
                 //.cors(cors -> cors.configurationSource(new CustomCorsConfiguration()))
@@ -75,5 +78,14 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/actuator/**"
+    };
+
+    private static final String[] permittedGetEndpoints = {
+            "/api/v1/job-offers",
+            "/api/v1/job-offers/*"
+    };
+
+    private static final String[] authenticatedEndpoints = {
+            "/api/v1/job-offers/mine"
     };
 }

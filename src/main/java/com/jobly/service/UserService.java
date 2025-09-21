@@ -42,4 +42,8 @@ public class UserService {
         var userEntity = userDao.save(user);
         return UserMapper.toUserRegisterResponse(userEntity);
     }
+
+    public UserEntity findById(Long userId) {
+        return userDao.findById(userId);
+    }
 }

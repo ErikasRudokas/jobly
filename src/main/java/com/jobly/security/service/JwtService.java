@@ -2,6 +2,7 @@ package com.jobly.security.service;
 
 import com.google.common.collect.ImmutableMap;
 import com.jobly.enums.TokenType;
+import com.jobly.exception.specific.InvalidCredentialsException;
 import com.jobly.model.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -84,7 +85,9 @@ public class JwtService {
         return expiration.before(new Date());
     }
 
-    public Long getUserIdFromToken(String token) {
+    public Long extractUserId(HttpServletRequest request) {
+        var token = extractTokenFromRequest(request)
+                .orElseThrow(() -> new InvalidCredentialsException("Access token is missing"));
         return extractClaim(token, claims -> claims.get(USER_ID_CLAIM_KEY, Long.class));
     }
 

@@ -3,6 +3,7 @@ package com.jobly.mapper;
 import com.jobly.gen.model.Category;
 import com.jobly.gen.model.CategoryCreateRequest;
 import com.jobly.gen.model.CategoryUpdateRequest;
+import com.jobly.gen.model.JobOfferCategory;
 import com.jobly.model.CategoryEntity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -30,5 +31,12 @@ public class CategoryMapper {
     public static void updateEntity(CategoryEntity existingCategory, CategoryUpdateRequest categoryUpdateRequest) {
         existingCategory.setName(categoryUpdateRequest.getName());
         existingCategory.setDescription(categoryUpdateRequest.getDescription());
+    }
+
+    public static JobOfferCategory toJobOfferCategory(CategoryEntity category) {
+        var jobOfferCategory = new JobOfferCategory();
+        jobOfferCategory.setId(category.getId());
+        jobOfferCategory.setName(category.getName());
+        return jobOfferCategory;
     }
 }
