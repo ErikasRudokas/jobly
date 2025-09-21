@@ -1,7 +1,7 @@
 package com.jobly.model;
 
-import com.jobly.enums.JobOfferStatus;
-import com.jobly.enums.WorkType;
+import com.jobly.gen.model.JobOfferStatus;
+import com.jobly.gen.model.WorkType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;

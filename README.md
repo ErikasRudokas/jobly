@@ -7,11 +7,11 @@ Potencialūs darbuotojai turės galimybę peržiūrėti darbo pasiūlymus, kandi
 
 ### 1.2. Funkciniai reikalavimai
 **Neregistruotas sistemos naudotojas galės:**
-1. Peržiūrėti darbo pasiūlymus;
-2. Registruotis.
+1. Peržiūrėti darbo pasiūlymus; ✓
+2. Registruotis. ✓
 
 **Registruotas sistemos varotojas galės:**
-1. Atsijungti;
+1. Atsijungti; ✓
 2. Peržiūrėti savo profilio informaciją;
 3. Redaguoti profilio informaciją;
 4. Įkelti naujausią CV versiją;
@@ -23,19 +23,19 @@ Potencialūs darbuotojai turės galimybę peržiūrėti darbo pasiūlymus, kandi
 10. Prašyti profilio patobulinimo į darbdavio statusą.
 
 **Darbdavys galės:**
-1. Sukurti skelbimą;
-2. Peržiūrėti savo sukurtus skelbimus;
-3. Koreguoti skelbimą;
-4. Šalinti skelbimą;
-5. Peržiūrėti skelbimo informaciją ir aplikantus;
+1. Sukurti skelbimą; ✓
+2. Peržiūrėti savo sukurtus skelbimus; ✓
+3. Koreguoti skelbimą; ✓
+4. Šalinti skelbimą; ✓
+5. Peržiūrėti skelbimo informaciją ir aplikantus; ✓
 6. Patvirtinti ar atmesti aplikavimą.
 
 **Administratorius galės:**
-1. Sukurti skelbimų kategoriją;
-2. Pašalinti kategoriją;
-3. Koreguoti kategoriją;
-4. Peržiūrėti visas sistemos kategorijas;
-5. Peržiūrėti kategoriją.
+1. Sukurti skelbimų kategoriją; ✓
+2. Pašalinti kategoriją; ✓
+3. Koreguoti kategoriją; ✓
+4. Peržiūrėti visas sistemos kategorijas; ✓
+5. Peržiūrėti kategoriją. ✓
 
 ---
 

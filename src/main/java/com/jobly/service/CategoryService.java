@@ -6,6 +6,7 @@ import com.jobly.gen.model.CategoryCreateRequest;
 import com.jobly.gen.model.CategoryUpdateRequest;
 import com.jobly.gen.model.GetAllCategoriesResponse;
 import com.jobly.mapper.CategoryMapper;
+import com.jobly.model.CategoryEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +31,9 @@ public class CategoryService {
                 .map(CategoryMapper::toCategory)
                 .toList();
 
-        return new GetAllCategoriesResponse().categories(categories);
+        return new GetAllCategoriesResponse()
+                .categories(categories)
+                .total(categories.size());
     }
 
     @PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -49,5 +52,9 @@ public class CategoryService {
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public void deleteCategoryById(Long id) {
         categoryDao.deleteById(id);
+    }
+
+    public CategoryEntity findEntityById(Long id) {
+        return categoryDao.findById(id);
     }
 }

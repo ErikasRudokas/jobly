@@ -1,5 +1,6 @@
 package com.jobly.dao;
 
+import com.jobly.exception.general.NotFoundException;
 import com.jobly.model.UserEntity;
 import com.jobly.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,5 +36,10 @@ public class UserDao {
 
     public UserEntity save(UserEntity userEntity) {
         return userRepository.save(userEntity);
+    }
+
+    public UserEntity findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
     }
 }

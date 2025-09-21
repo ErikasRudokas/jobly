@@ -391,6 +391,318 @@ paths:
               schema:
                 $ref: '#/components/schemas/InternalServerErrorMessage'
 
+  /job-offers:
+    get:
+      summary: Get all job offers
+      tags:
+        - Job Offers
+      operationId: getAllJobOffers
+      responses:
+        '200':
+          description: A list of all job offers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllJobOffersResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
+  /job-offers/{id}:
+    get:
+      summary: Get job offer by ID
+      tags:
+        - Job Offers
+      operationId: getJobOfferById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The ID of the job offer to retrieve
+      responses:
+        '200':
+          description: Job offer details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobOfferDetailsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+    put:
+      summary: Update an existing job offer
+      tags:
+        - Job Offers
+      operationId: updateJobOffer
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The ID of the job offer to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateJobOfferRequest'
+      responses:
+        '200':
+          description: Job offer updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobOffer'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestMessage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+    delete:
+      summary: Delete job offer by ID
+      tags:
+        - Job Offers
+      operationId: deleteJobOffer
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The ID of the job offer to delete
+      responses:
+        '204':
+          description: Job offer deleted successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestMessage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
+  /job-offers/mine:
+    get:
+      summary: Get job offers owned by the authenticated user
+      tags:
+        - Job Offers
+      operationId: getOwnedJobOffers
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: A list of job offers owned by the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMineJobOffersResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
+  /job-offers/mine/{id}:
+    get:
+      summary: Get job offer and its applications owned by the authenticated user
+      tags:
+        - Job Offers
+      operationId: getOwnedJobOfferDetails
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The ID of the job offer and its applications to retrieve
+      responses:
+        '200':
+          description: Job offer and applications related to it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobOfferWithApplicationsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
+  /job-offers/create:
+    post:
+      summary: Create a new job offer
+      tags:
+        - Job Offers
+      operationId: createJobOffer
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateJobOfferRequest'
+      responses:
+        '201':
+          description: Job offer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobOffer'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestMessage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -402,6 +714,11 @@ components:
       type: string
       format: date-time
       example: '2023-10-01T12:00:00Z'
+
+    SystemGeneratedId:
+      type: integer
+      format: int64
+      example: 1
 
     BadRequestMessage:
       type: object
@@ -505,8 +822,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          $ref: '#/components/schemas/SystemGeneratedId'
         firstName:
           type: string
           example: John
@@ -561,6 +877,9 @@ components:
     GetAllCategoriesResponse:
       type: object
       properties:
+        total:
+          type: integer
+          example: 3
         categories:
           type: array
           items:
@@ -570,8 +889,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          $ref: '#/components/schemas/SystemGeneratedId'
         name:
           type: string
           example: Software Development
@@ -601,7 +919,6 @@ components:
     CategoryUpdateRequest:
       type: object
       required:
-        - id
         - name
         - description
       properties:
@@ -613,3 +930,276 @@ components:
           type: string
           example: Jobs related to software development and programming
           maxLength: 255
+
+    GetAllJobOffersResponse:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 5
+        jobOffers:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobOfferListObject'
+
+    GetMineJobOffersResponse:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 5
+        jobOffers:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobOfferListObject'
+
+    JobOfferListObject:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        title:
+          type: string
+          example: Senior Java Developer
+          maxLength: 32
+        companyName:
+          type: string
+          example: Tech Solutions Inc.
+          maxLength: 60
+        salary:
+          type: number
+          format: float
+          example: 85000.00
+        workType:
+          $ref: '#/components/schemas/WorkType'
+        location:
+          type: string
+          example: New York, NY
+          maxLength: 100
+        category:
+          $ref: '#/components/schemas/JobOfferCategory'
+
+    JobOffer:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        title:
+          type: string
+          example: Senior Java Developer
+          maxLength: 32
+        description:
+          type: string
+          example: We are looking for a Senior Java Developer with 5+ years of experience...
+          maxLength: 1024
+        companyName:
+          type: string
+          example: Tech Solutions Inc.
+          maxLength: 60
+        salary:
+          type: number
+          format: float
+          example: 85000.00
+        yearsOfExperience:
+          type: integer
+          format: int32
+          example: 5
+        workType:
+          $ref: '#/components/schemas/WorkType'
+        location:
+          type: string
+          example: New York, NY
+          maxLength: 100
+        contactEmail:
+          type: string
+          format: email
+        contactPhone:
+          type: string
+          example: +37061234567
+          maxLength: 15
+        offerStatus:
+          $ref: '#/components/schemas/JobOfferStatus'
+        createdAt:
+          $ref: '#/components/schemas/DateTime'
+        updatedAt:
+          $ref: '#/components/schemas/DateTime'
+        category:
+          $ref: '#/components/schemas/JobOfferCategory'
+        creator:
+          $ref: '#/components/schemas/Creator'
+
+    WorkType:
+      type: string
+      enum: [ ON_SITE, REMOTE, HYBRID ]
+
+    JobOfferStatus:
+      type: string
+      enum: [ OPEN, CLOSED ]
+
+    JobOfferCategory:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        name:
+          type: string
+          example: Software Development
+          maxLength: 32
+
+    Creator:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: John
+          maxLength: 20
+        lastName:
+          type: string
+          example: Doe
+          maxLength: 20
+
+    Application:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        comment:
+          type: string
+          maxLength: 1000
+        createdAt:
+          $ref: '#/components/schemas/DateTime'
+        updatedAt:
+          $ref: '#/components/schemas/DateTime'
+        applicant:
+          $ref: '#/components/schemas/Applicant'
+        cvId:
+          $ref: '#/components/schemas/SystemGeneratedId'
+
+    Applicant:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        firstName:
+          type: string
+          example: Jane
+          maxLength: 20
+        lastName:
+          type: string
+          example: Smith
+          maxLength: 20
+        email:
+          type: string
+          format: email
+
+    JobOfferWithApplicationsResponse:
+      type: object
+      properties:
+        jobOffer:
+          $ref: '#/components/schemas/JobOffer'
+        applications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Application'
+
+    JobOfferDetailsResponse:
+      type: object
+      properties:
+        jobOffer:
+          $ref: '#/components/schemas/JobOffer'
+
+    CreateJobOfferRequest:
+      type: object
+      required:
+        - title
+        - description
+        - companyName
+        - salary
+        - yearsOfExperience
+        - workType
+        - contactEmail
+        - categoryId
+      properties:
+        title:
+          type: string
+          example: Senior Java Developer
+          maxLength: 32
+        description:
+          type: string
+          example: We are looking for a Senior Java Developer with 5+ years of experience...
+          maxLength: 1024
+        companyName:
+          type: string
+          example: Tech Solutions Inc.
+          maxLength: 60
+        salary:
+          type: number
+          format: float
+          example: 85000.00
+        yearsOfExperience:
+          type: integer
+          format: int32
+          example: 5
+        workType:
+          $ref: '#/components/schemas/WorkType'
+        location:
+          type: string
+          example: New York, NY
+          maxLength: 100
+        contactEmail:
+          type: string
+          format: email
+        contactPhone:
+          type: string
+          example: +37061234567
+          maxLength: 15
+        categoryId:
+          $ref: '#/components/schemas/SystemGeneratedId'
+
+    UpdateJobOfferRequest:
+      type: object
+      required:
+        - title
+        - description
+        - companyName
+        - salary
+        - yearsOfExperience
+        - workType
+        - contactEmail
+        - categoryId
+      properties:
+        title:
+          type: string
+          example: Senior Java Developer
+          maxLength: 32
+        description:
+          type: string
+          example: We are looking for a Senior Java Developer with 5+ years of experience...
+          maxLength: 1024
+        companyName:
+          type: string
+          example: Tech Solutions Inc.
+          maxLength: 60
+        salary:
+          type: number
+          format: float
+          example: 85000.00
+        yearsOfExperience:
+          type: integer
+          format: int32
+          example: 5
+        workType:
+          $ref: '#/components/schemas/WorkType'
+        location:
+          type: string
+          example: New York, NY
+          maxLength: 100
+        contactEmail:
+          type: string
+          format: email
+        contactPhone:
+          type: string
+          example: +37061234567
+          maxLength: 15
+        categoryId:
+          $ref: '#/components/schemas/SystemGeneratedId'
