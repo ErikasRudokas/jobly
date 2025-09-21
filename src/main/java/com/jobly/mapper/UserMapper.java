@@ -16,17 +16,16 @@ public class UserMapper {
                 .lastName(registerRequest.getLastName())
                 .username(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
-                .role(Role.USER)
+                .role(Role.ADMINISTRATOR)
                 .build();
     }
 
     public static UserRegisterResponse toUserRegisterResponse(UserEntity userEntity) {
-        return UserRegisterResponse.builder()
+        return new UserRegisterResponse()
                 .id(userEntity.getId())
                 .firstName(userEntity.getFirstName())
                 .lastName(userEntity.getLastName())
                 .username(userEntity.getUsername())
-                .email(userEntity.getEmail())
-                .build();
+                .email(userEntity.getEmail());
     }
 }

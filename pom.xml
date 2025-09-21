@@ -173,7 +173,6 @@
 							<generateModelTests>false</generateModelTests>
 							<supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
 							<configOptions>
-								<additionalModelTypeAnnotations>@lombok.Builder @lombok.AllArgsConstructor @lombok.NoArgsConstructor</additionalModelTypeAnnotations>
 								<delegatePattern>true</delegatePattern>
 								<useBeanValidation>true</useBeanValidation>
 								<performBeanValidation>true</performBeanValidation>
