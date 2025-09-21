@@ -39,10 +39,9 @@ public class AuthenticationService {
 
         revokeAndSaveNewTokens(user, accessToken, refreshToken);
 
-        return UserLoginResponse.builder()
+        return new UserLoginResponse()
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+                .refreshToken(refreshToken);
     }
 
     public UserRegisterResponse register(UserRegisterRequest userRegisterRequest) {
@@ -74,9 +73,8 @@ public class AuthenticationService {
         tokenService.revokeAllUserTokensByType(user, TokenType.BEARER);
         tokenService.saveToken(user, accessToken, TokenType.BEARER);
 
-        return RefreshTokenResponse.builder()
-                .accessToken(accessToken)
-                .build();
+        return new RefreshTokenResponse()
+                .accessToken(accessToken);
     }
 
     private void authenticateUser(UserLoginRequest userLoginRequest, UserEntity user) {

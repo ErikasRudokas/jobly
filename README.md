@@ -35,7 +35,7 @@ Potencialūs darbuotojai turės galimybę peržiūrėti darbo pasiūlymus, kandi
 2. Pašalinti kategoriją;
 3. Koreguoti kategoriją;
 4. Peržiūrėti visas sistemos kategorijas;
-5. Pašalinti kategoriją.
+5. Peržiūrėti kategoriją.
 
 ---
 
