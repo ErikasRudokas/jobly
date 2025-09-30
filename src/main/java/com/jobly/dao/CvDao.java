@@ -33,4 +33,13 @@ public class CvDao {
         return userCvRepository.findByUserIdAndStatus(userId, cvStatus)
                 .orElseThrow(() -> new NotFoundException("No active CV found for user with the id: " + userId));
     }
+
+    public UserCvEntity findById(Long cvId) {
+        return userCvRepository.findById(cvId)
+                .orElseThrow(() -> new NotFoundException("CV not found with the id: " + cvId));
+    }
+
+    public UserCvEntity findOptionalByUserIdAndStatus(Long userId, CvStatus cvStatus) {
+        return userCvRepository.findByUserIdAndStatus(userId, cvStatus).orElse(null);
+    }
 }

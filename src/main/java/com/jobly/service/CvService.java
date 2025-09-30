@@ -2,8 +2,11 @@ package com.jobly.service;
 
 import com.jobly.dao.CvDao;
 import com.jobly.enums.CvStatus;
+import com.jobly.exception.general.ForbiddenException;
 import com.jobly.gen.model.CvUploadResponse;
+import com.jobly.gen.model.GetUserDetailsResponse;
 import com.jobly.mapper.CvMapper;
+import com.jobly.mapper.UserMapper;
 import com.jobly.model.UserCvEntity;
 import com.jobly.util.HttpHeaderConstants;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +42,11 @@ public class CvService {
         return CvMapper.toCvUploadResponse(cvDao.save(userCvEntity));
     }
 
-    @PreAuthorize("hasRole('EMPLOYER') or #requestedOnUserId == #userId")
-    public ResponseEntity<Resource> downloadUserCv(Long requestedOnUserId, Long userId) {
-        UserCvEntity userCvEntity = cvDao.findByUserIdAndStatus(requestedOnUserId, CvStatus.ACTIVE);
+    public ResponseEntity<Resource> downloadUserCv(Long cvId, Long userId) {
+        UserCvEntity userCvEntity = cvDao.findById(cvId);
+        if (!userCvEntity.getUser().getId().equals(userId) && !userService.isCurrentUserEmployer(userId)) {
+            throw new ForbiddenException("Access denied: You do not have permission to access this CV.");
+        }
 
         ContentDisposition contentDisposition = ContentDisposition.builder(HttpHeaderConstants.CONTENT_DISPOSITION_ATTACHMENT)
                 .filename(userCvEntity.getTitle())
@@ -55,5 +60,18 @@ public class CvService {
                 .contentLength(fileData.length)
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(resource);
+    }
+
+    public UserCvEntity findActiveCvByUserId(Long userId) {
+        return cvDao.findByUserIdAndStatus(userId, CvStatus.ACTIVE);
+    }
+
+    public GetUserDetailsResponse getUserDetailsWithCv(Long userId) {
+        var userCv = findOptionalActiveCvByUserId(userId);
+        return UserMapper.toGetUserDetailsResponse(userService.findById(userId), userCv);
+    }
+
+    private UserCvEntity findOptionalActiveCvByUserId(Long userId) {
+        return cvDao.findOptionalByUserIdAndStatus(userId, CvStatus.ACTIVE);
     }
 }

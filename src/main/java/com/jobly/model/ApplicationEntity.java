@@ -1,6 +1,6 @@
 package com.jobly.model;
 
-import com.jobly.enums.ApplicationStatus;
+import com.jobly.gen.model.ApplicationStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;

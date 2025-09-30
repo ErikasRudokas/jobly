@@ -1,6 +1,7 @@
 package com.jobly.service;
 
 import com.jobly.dao.UserDao;
+import com.jobly.enums.Role;
 import com.jobly.gen.model.GetUserDetailsResponse;
 import com.jobly.gen.model.UserRegisterRequest;
 import com.jobly.gen.model.UserRegisterResponse;
@@ -48,7 +49,7 @@ public class UserService {
         return userDao.findById(userId);
     }
 
-    public GetUserDetailsResponse getUserDetails(Long userId) {
-        return UserMapper.toGetUserDetailsResponse(userDao.findById(userId));
+    public boolean isCurrentUserEmployer(Long userId) {
+        return userDao.findById(userId).getRole().equals(Role.EMPLOYER);
     }
 }

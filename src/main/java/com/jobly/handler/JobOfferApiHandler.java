@@ -1,5 +1,6 @@
 package com.jobly.handler;
 
+import com.jobly.gen.api.ApiUtil;
 import com.jobly.gen.api.JobOffersApiDelegate;
 import com.jobly.gen.model.*;
 import com.jobly.security.service.JwtService;
@@ -7,6 +8,8 @@ import com.jobly.service.JobOfferService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -69,5 +72,14 @@ public class JobOfferApiHandler implements JobOffersApiDelegate {
         var userId = jwtService.extractUserId(httpServletRequest);
         jobOfferService.deleteJobOffer(id, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<Application> applyToJobOffer(Long jobOfferId, ApplicationCreateRequest applicationCreateRequest) {
+        var userId = jwtService.extractUserId(httpServletRequest);
+        log.info("User with id {} is applying to job offer with id {}", userId, jobOfferId);
+        var application = jobOfferService.applyToJobOffer(jobOfferId, userId, applicationCreateRequest);
+        return ResponseEntity.created(URI.create("/applications/mine/" + application.getId()))
+                .body(application);
     }
 }

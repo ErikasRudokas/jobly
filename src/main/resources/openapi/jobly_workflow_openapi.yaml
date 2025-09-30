@@ -238,9 +238,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/InternalServerErrorMessage'
 
-  /users/{id}/cv:
+  /users/cv/{id}:
     get:
-      summary: Download a user's CV by user ID
+      summary: Download a user's CV by CV ID
       tags:
         - User Details
       operationId: downloadUserCv
@@ -252,7 +252,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/SystemGeneratedId'
-          description: The ID of the user whose CV is to be downloaded
+          description: The ID of the CV to be downloaded
       responses:
         '200':
           description: CV downloaded successfully
@@ -844,6 +844,320 @@ paths:
               schema:
                 $ref: '#/components/schemas/InternalServerErrorMessage'
 
+  /job-offers/{jobOfferId}/apply:
+    post:
+      summary: Apply to a job offer
+      tags:
+        - Application
+      operationId: applyToJobOffer
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: jobOfferId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The ID of the job offer to apply to
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationCreateRequest'
+      responses:
+        '201':
+          description: Application submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestMessage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundMessage'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
+  /applications/mine:
+    get:
+      summary: Get applications submitted by the authenticated user
+      tags:
+        - Application
+      operationId: getMyApplications
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: A list of applications submitted by the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMyApplicationsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
+  /applications/mine/{id}:
+    get:
+      summary: Get application details by ID for the authenticated user
+      tags:
+        - Application
+      operationId: getMyApplication
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The ID of the application to retrieve
+      responses:
+        '200':
+          description: A list of applications submitted by the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyApplication'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
+  /applications/{id}/cancel:
+    post:
+      summary: Cancel an application by ID for the authenticated user
+      tags:
+        - Application
+      operationId: cancelApplication
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The ID of the application to cancel
+      responses:
+        '204':
+          description: Application cancelled successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestMessage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
+  /applications/{id}:
+    put:
+      summary: Update an application by ID for the authenticated user
+      tags:
+        - Application
+      operationId: updateApplication
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The ID of the application to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationUpdateRequest'
+      responses:
+        '200':
+          description: Application updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestMessage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
+  /applications/{id}/manage:
+    post:
+      summary: Manage an application (e.g., approve or reject) for job offer owner
+      tags:
+        - Application
+      operationId: manageApplication
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The ID of the application to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationManageRequest'
+      responses:
+        '204':
+          description: Application managed successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestMessage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -1213,8 +1527,14 @@ components:
           $ref: '#/components/schemas/DateTime'
         applicant:
           $ref: '#/components/schemas/Applicant'
+        applicationStatus:
+          $ref: '#/components/schemas/ApplicationStatus'
         cvId:
           $ref: '#/components/schemas/SystemGeneratedId'
+
+    ApplicationStatus:
+      type: string
+      enum: [ PENDING, ACCEPTED, REJECTED, WITHDRAWN ]
 
     Applicant:
       type: object
@@ -1362,6 +1682,8 @@ components:
         email:
           type: string
           format: email
+        cvId:
+          $ref: '#/components/schemas/SystemGeneratedId'
 
     ModifyUserDetailsRequest:
       type: object
@@ -1387,3 +1709,69 @@ components:
       properties:
         cvId:
           $ref: '#/components/schemas/SystemGeneratedId'
+
+    ApplicationCreateRequest:
+      type: object
+      properties:
+        comment:
+          type: string
+          example: I am very interested in this position and believe my skills are a great match.
+          maxLength: 1000
+
+    GetMyApplicationsResponse:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 3
+        applications:
+          type: array
+          items:
+            $ref: '#/components/schemas/MyApplicationListObject'
+
+    MyApplicationListObject:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        updatedAt:
+          $ref: '#/components/schemas/DateTime'
+        jobOffer:
+          $ref: '#/components/schemas/JobOfferListObject'
+        applicationStatus:
+          $ref: '#/components/schemas/ApplicationStatus'
+
+    MyApplication:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        comment:
+          type: string
+          maxLength: 1000
+        createdAt:
+          $ref: '#/components/schemas/DateTime'
+        updatedAt:
+          $ref: '#/components/schemas/DateTime'
+        jobOffer:
+          $ref: '#/components/schemas/JobOfferListObject'
+        cvId:
+          $ref: '#/components/schemas/SystemGeneratedId'
+
+    ApplicationUpdateRequest:
+      type: object
+      properties:
+        comment:
+          type: string
+          example: I have updated my application with more relevant experience.
+          maxLength: 1000
+
+    ApplicationManageRequest:
+      type: object
+      properties:
+        action:
+          $ref: '#/components/schemas/ApplicationManageAction'
+    
+    ApplicationManageAction:
+      type: string
+      enum: [ APPROVE, REJECT ]
