@@ -12,15 +12,14 @@ Potencialūs darbuotojai turės galimybę peržiūrėti darbo pasiūlymus, kandi
 
 **Registruotas sistemos varotojas galės:**
 1. Atsijungti; ✓
-2. Peržiūrėti savo profilio informaciją;
-3. Redaguoti profilio informaciją;
-4. Įkelti naujausią CV versiją;
-5. Aplikuoti į darbo pasiūlymą;
-6. Peržiūrėti savo aplikacijas;
-7. Peržiūrėti aplikacijos detales;
-8. Atšaukti aplikaciją;
-9. Koreguoti aplikaciją;
-10. Prašyti profilio patobulinimo į darbdavio statusą.
+2. Peržiūrėti savo profilio informaciją; ✓
+3. Įkelti naujausią CV versiją; ✓
+4. Aplikuoti į darbo pasiūlymą;
+5. Peržiūrėti savo aplikacijas;
+6. Peržiūrėti aplikacijos detales;
+7. Atšaukti aplikaciją;
+8. Koreguoti aplikaciją;
+9. Prašyti profilio patobulinimo į darbdavio statusą.
 
 **Darbdavys galės:**
 1. Sukurti skelbimą; ✓

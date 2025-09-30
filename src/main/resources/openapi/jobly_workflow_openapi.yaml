@@ -151,6 +151,147 @@ paths:
               schema:
                 $ref: '#/components/schemas/InternalServerErrorMessage'
 
+  /users/me:
+    get:
+      summary: Get authenticated user's details
+      tags:
+        - User Details
+      operationId: getUserDetails
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: User details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserDetailsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
+  /users/cv:
+    post:
+      summary: Upload a CV for the authenticated user
+      tags:
+        - User Details
+      operationId: uploadUserCv
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+            encoding:
+              file:
+                contentType: application/pdf
+      responses:
+        '200':
+          description: CV uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CvUploadResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestMessage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
+  /users/{id}/cv:
+    get:
+      summary: Download a user's CV by user ID
+      tags:
+        - User Details
+      operationId: downloadUserCv
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/SystemGeneratedId'
+          description: The ID of the user whose CV is to be downloaded
+      responses:
+        '200':
+          description: CV downloaded successfully
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestMessage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedMessage'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenMessage'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+
   /categories:
     get:
       summary: Get all categories
@@ -1202,4 +1343,47 @@ components:
           example: +37061234567
           maxLength: 15
         categoryId:
+          $ref: '#/components/schemas/SystemGeneratedId'
+
+    GetUserDetailsResponse:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        username:
+          type: string
+          example: john.doe
+        email:
+          type: string
+          format: email
+
+    ModifyUserDetailsRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: John
+          maxLength: 20
+        lastName:
+          type: string
+          example: Doe
+          maxLength: 20
+        username:
+          type: string
+          example: john.doe
+          maxLength: 32
+        email:
+          type: string
+          format: email
+
+    CvUploadResponse:
+      type: object
+      properties:
+        cvId:
           $ref: '#/components/schemas/SystemGeneratedId'

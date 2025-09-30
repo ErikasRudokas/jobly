@@ -2,6 +2,7 @@ package com.jobly.mapper;
 
 import com.jobly.enums.Role;
 import com.jobly.gen.model.Creator;
+import com.jobly.gen.model.GetUserDetailsResponse;
 import com.jobly.gen.model.UserRegisterRequest;
 import com.jobly.gen.model.UserRegisterResponse;
 import com.jobly.model.UserEntity;
@@ -35,5 +36,15 @@ public class UserMapper {
         creator.setFirstName(userEntity.getFirstName());
         creator.setLastName(userEntity.getLastName());
         return creator;
+    }
+
+    public static GetUserDetailsResponse toGetUserDetailsResponse(UserEntity userEntity) {
+        var response = new GetUserDetailsResponse();
+        response.setId(userEntity.getId());
+        response.setFirstName(userEntity.getFirstName());
+        response.setLastName(userEntity.getLastName());
+        response.setUsername(userEntity.getUsername());
+        response.setEmail(userEntity.getEmail());
+        return response;
     }
 }
