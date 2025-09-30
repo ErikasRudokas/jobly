@@ -2,6 +2,7 @@ package com.jobly.exception;
 
 import com.jobly.exception.general.ForbiddenException;
 import com.jobly.exception.general.NotFoundException;
+import com.jobly.exception.general.SystemException;
 import com.jobly.exception.specific.*;
 import com.jobly.gen.model.*;
 import com.jobly.util.ExceptionHandlerUtils;
@@ -57,6 +58,14 @@ public class GlobalExceptionHandler {
         log.error(ex.getMessage());
         var conflictMessage = ExceptionHandlerUtils.getConflictError(ex.getMessage());
         return new ResponseEntity<>(conflictMessage, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler({SystemException.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<InternalServerErrorMessage> handleSystemException(SystemException ex) {
+        log.error("System error occurred: ", ex);
+        var internalServerError = ExceptionHandlerUtils.getInternalServerError(ex.getMessage());
+        return new ResponseEntity<>(internalServerError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler({Exception.class})

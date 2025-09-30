@@ -1,6 +1,7 @@
 package com.jobly.service;
 
 import com.jobly.dao.UserDao;
+import com.jobly.gen.model.GetUserDetailsResponse;
 import com.jobly.gen.model.UserRegisterRequest;
 import com.jobly.gen.model.UserRegisterResponse;
 import com.jobly.mapper.UserMapper;
@@ -45,5 +46,9 @@ public class UserService {
 
     public UserEntity findById(Long userId) {
         return userDao.findById(userId);
+    }
+
+    public GetUserDetailsResponse getUserDetails(Long userId) {
+        return UserMapper.toGetUserDetailsResponse(userDao.findById(userId));
     }
 }
