@@ -1,8 +1,11 @@
 package com.jobly.service;
 
+import com.jobly.dao.ApplicationDao;
 import com.jobly.dao.JobOfferDao;
+import com.jobly.exception.general.BadRequestException;
 import com.jobly.exception.general.ForbiddenException;
 import com.jobly.gen.model.*;
+import com.jobly.mapper.ApplicationMapper;
 import com.jobly.mapper.JobOfferMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +20,8 @@ public class JobOfferService {
     private final JobOfferDao jobOfferDao;
     private final UserService userService;
     private final CategoryService categoryService;
+    private final CvService cvService;
+    private final ApplicationDao applicationDao;
 
     public GetAllJobOffersResponse findAll() {
         var jobOffers = jobOfferDao.findAll().stream()
@@ -50,7 +55,8 @@ public class JobOfferService {
         if (!jobOffer.getCreator().getId().equals(userId)) {
             throw new ForbiddenException("User is not the owner of the job offer");
         }
-        return JobOfferMapper.toJobOfferWithApplicationsResponse(jobOffer);
+        var applications = applicationDao.findAllPendingByJobOfferId(id);
+        return JobOfferMapper.toJobOfferWithApplicationsResponse(jobOffer, applications);
     }
 
     @PreAuthorize("hasRole('EMPLOYER')")
@@ -79,5 +85,19 @@ public class JobOfferService {
             throw new ForbiddenException("User is not the owner of the job offer");
         }
         jobOfferDao.delete(jobOffer);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    public Application applyToJobOffer(Long jobOfferId, Long userId, ApplicationCreateRequest applicationCreateRequest) {
+        var applicant = userService.findById(userId);
+        var jobOffer = jobOfferDao.findById(jobOfferId);
+        var userCv = cvService.findActiveCvByUserId(userId);
+
+        if (applicationDao.isUserAlreadyAppliedToJobOffer(userId, jobOfferId)) {
+            throw new BadRequestException("User has already applied to this job offer");
+        }
+
+        var application = ApplicationMapper.toApplicationEntity(applicationCreateRequest, applicant, jobOffer, userCv);
+        return ApplicationMapper.toApplication(applicationDao.saveApplication(application));
     }
 }

@@ -1,6 +1,7 @@
 package com.jobly.mapper;
 
 import com.jobly.gen.model.*;
+import com.jobly.model.ApplicationEntity;
 import com.jobly.model.CategoryEntity;
 import com.jobly.model.JobOfferEntity;
 import com.jobly.model.UserEntity;
@@ -50,10 +51,10 @@ public class JobOfferMapper {
         return jobOfferDetailsResponse;
     }
 
-    public static JobOfferWithApplicationsResponse toJobOfferWithApplicationsResponse(JobOfferEntity jobOffer) {
+    public static JobOfferWithApplicationsResponse toJobOfferWithApplicationsResponse(JobOfferEntity jobOffer, List<ApplicationEntity> applications) {
         var response = new JobOfferWithApplicationsResponse();
         response.setJobOffer(toJobOffer(jobOffer));
-        response.setApplications(List.of()); // TODO after implementing applications update this
+        response.setApplications(applications.stream().map(ApplicationMapper::toApplication).toList());
         return response;
     }
 
