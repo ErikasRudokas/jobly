@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableMethodSecurity
@@ -39,6 +40,8 @@ public class SecurityConfig {
 
     private final AuthExceptionHandler authExceptionHandler;
 
+    private final CorsConfigurationSource corsConfigurationSource;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.
@@ -49,7 +52,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, permittedGetEndpoints).permitAll()
                         .anyRequest().authenticated()
                 )
-                //.cors(cors -> cors.configurationSource(new CustomCorsConfiguration()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

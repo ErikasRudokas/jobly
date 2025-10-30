@@ -38,9 +38,9 @@ public class UserEntity implements UserDetails {
     @Size(min = 2, max = 20, message = "Last name must be between 2 and 20 characters long")
     private String lastName;
 
-    @Column(name = "USERNAME", nullable = false, unique = true)
+    @Column(name = "DISPLAY_NAME", nullable = false, unique = true)
     @Size(max = 32, message = "Username must be at most 32 characters long")
-    private String username;
+    private String displayName;
 
     @Column(name = "EMAIL", nullable = false, unique = true)
     @Size(max = 64, message = "Email must be at most 64 characters long")
