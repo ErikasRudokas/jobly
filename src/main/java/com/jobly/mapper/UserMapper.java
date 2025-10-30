@@ -16,9 +16,9 @@ public class UserMapper {
         return UserEntity.builder()
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
-                .username(registerRequest.getUsername())
+                .displayName(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
-                .role(Role.ADMINISTRATOR)
+                .role(Role.USER)
                 .build();
     }
 
@@ -27,7 +27,7 @@ public class UserMapper {
                 .id(userEntity.getId())
                 .firstName(userEntity.getFirstName())
                 .lastName(userEntity.getLastName())
-                .username(userEntity.getUsername())
+                .username(userEntity.getDisplayName())
                 .email(userEntity.getEmail());
     }
 
@@ -43,7 +43,7 @@ public class UserMapper {
         response.setId(userEntity.getId());
         response.setFirstName(userEntity.getFirstName());
         response.setLastName(userEntity.getLastName());
-        response.setUsername(userEntity.getUsername());
+        response.setUsername(userEntity.getDisplayName());
         response.setEmail(userEntity.getEmail());
         response.setCvId(Optional.ofNullable(userCv).map(UserCvEntity::getId).orElse(null));
         return response;

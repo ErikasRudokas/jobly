@@ -25,7 +25,6 @@ public class TokenEntity {
     private Long id;
 
     @Column(name = "TOKEN", nullable = false)
-    @Size(max = 255, message = "Token must be at most 255 characters long")
     private String token;
 
     @Column(name = "TOKEN_TYPE", nullable = false)

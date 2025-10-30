@@ -2,7 +2,6 @@ package com.jobly.service;
 
 import com.jobly.dao.UserDao;
 import com.jobly.enums.Role;
-import com.jobly.gen.model.GetUserDetailsResponse;
 import com.jobly.gen.model.UserRegisterRequest;
 import com.jobly.gen.model.UserRegisterResponse;
 import com.jobly.mapper.UserMapper;
@@ -26,16 +25,12 @@ public class UserService {
         return userDao.findByEmail(email);
     }
 
-    public Optional<UserEntity> findByUsername(String username) {
-        return userDao.findByUsername(username);
-    }
-
     public boolean existsByEmail(String email) {
         return userDao.existsByEmail(email);
     }
 
     public boolean existsByUsername(String username) {
-        return userDao.existsByUsername(username);
+        return userDao.existsByDisplayName(username);
     }
 
     public UserRegisterResponse save(UserRegisterRequest registerRequest) {
