@@ -82,4 +82,12 @@ public class JobOfferApiHandler implements JobOffersApiDelegate {
         return ResponseEntity.created(URI.create("/applications/mine/" + application.getId()))
                 .body(application);
     }
+
+    @Override
+    public ResponseEntity<CanApplyResponse> canApplyToJobOffer(Long jobOfferId) {
+        var userId = jwtService.extractUserId(httpServletRequest);
+        log.info("Checking if user with id {} can apply to job offer with id {}", userId, jobOfferId);
+        var canApplyResponse = jobOfferService.canApplyToJobOffer(jobOfferId, userId);
+        return ResponseEntity.ok(canApplyResponse);
+    }
 }
