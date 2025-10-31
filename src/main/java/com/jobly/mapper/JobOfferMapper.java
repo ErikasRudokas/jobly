@@ -42,6 +42,7 @@ public class JobOfferMapper {
         jobOfferListObject.setWorkType(jobOfferEntity.getWorkType());
         jobOfferListObject.setLocation(jobOfferEntity.getLocation());
         jobOfferListObject.setCategory(CategoryMapper.toJobOfferCategory(jobOfferEntity.getCategory()));
+        jobOfferListObject.setCompanyName(jobOfferEntity.getCompany());
         return jobOfferListObject;
     }
 

@@ -45,6 +45,7 @@ public class ApplicationDao {
     }
 
     public boolean isUserAlreadyAppliedToJobOffer(Long userId, Long jobOfferId) {
-        return applicationRepository.existsByApplicantIdAndJobOfferId(userId, jobOfferId);
+        return applicationRepository.existsByApplicantIdAndJobOfferIdAndStatusIn(userId, jobOfferId,
+                List.of(ApplicationStatus.ACCEPTED, ApplicationStatus.PENDING, ApplicationStatus.REJECTED));
     }
 }

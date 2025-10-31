@@ -45,6 +45,7 @@ public class ApplicationMapper {
         var myApplication = new MyApplication();
         myApplication.setId(application.getId());
         myApplication.setComment(application.getComment());
+        myApplication.setApplicationStatus(application.getStatus());
         myApplication.setCreatedAt(application.getCreatedAt());
         myApplication.setUpdatedAt(application.getUpdatedAt());
         myApplication.setJobOffer(JobOfferMapper.toJobOfferListObject(application.getJobOffer()));

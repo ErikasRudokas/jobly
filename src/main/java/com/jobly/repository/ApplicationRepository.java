@@ -16,5 +16,5 @@ public interface ApplicationRepository extends JpaRepository<ApplicationEntity, 
 
     List<ApplicationEntity> findAllByJobOfferIdAndStatus(Long jobOfferId, ApplicationStatus status);
 
-    boolean existsByApplicantIdAndJobOfferId(Long userId, Long jobOfferId);
+    boolean existsByApplicantIdAndJobOfferIdAndStatusIn(Long userId, Long jobOfferId, List<ApplicationStatus> statuses);
 }

@@ -100,4 +100,10 @@ public class JobOfferService {
         var application = ApplicationMapper.toApplicationEntity(applicationCreateRequest, applicant, jobOffer, userCv);
         return ApplicationMapper.toApplication(applicationDao.saveApplication(application));
     }
+
+    @PreAuthorize("hasRole('USER')")
+    public CanApplyResponse canApplyToJobOffer(Long jobOfferId, Long userId) {
+        var canApply = !applicationDao.isUserAlreadyAppliedToJobOffer(userId, jobOfferId);
+        return new CanApplyResponse().canApply(canApply);
+    }
 }
