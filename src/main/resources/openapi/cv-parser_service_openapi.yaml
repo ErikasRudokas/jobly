@@ -1,0 +1,96 @@
+openapi: 3.0.4
+info:
+  title: CV Parser Service API
+  description: |-
+    This specification defines the API for the CV Parser Service, which provides endpoints for parsing and extracting information from CVs/resumes.
+  version: 1.0.0
+servers:
+  - url: https://jobly-cv-parser.com/api/v1
+paths:
+  /parse/cv:
+    post:
+      summary: Parse a CV/Resume
+      description: Upload a CV/Resume file to extract structured information such as personal details, education, work experience, skills, and more.
+      tags:
+        - CV Parser
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CVParseRequest'
+      responses:
+        '200':
+          description: Successfully parsed the CV/Resume
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CvParseResponse'
+        '400':
+          description: Bad Request - Invalid file format or missing file
+        '500':
+          description: Internal Server Error - An error occurred while processing the CV/Resume
+
+components:
+  schemas:
+    CVParseRequest:
+      type: object
+      required:
+        - file
+      properties:
+        file:
+          type: string
+          format: binary
+          description: The CV/Resume file to be parsed (PDF, DOCX, etc.)
+
+    CvParseResponse:
+      type: object
+      properties:
+        personalDetails:
+          $ref: '#/components/schemas/PersonalDetails'
+        education:
+          type: array
+          items:
+            $ref: '#/components/schemas/Education'
+        workExperience:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkExperience'
+        skills:
+          type: array
+          items:
+              type: string
+
+    PersonalDetails:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+
+    Education:
+      type: object
+      properties:
+        institution:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+
+    WorkExperience:
+      type: object
+      properties:
+        company:
+          type: string
+        designation:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date

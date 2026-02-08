@@ -8,18 +8,21 @@ import com.jobly.gen.model.GetUserDetailsResponse;
 import com.jobly.mapper.CvMapper;
 import com.jobly.mapper.UserMapper;
 import com.jobly.model.UserCvEntity;
+import com.jobly.service.api.CvParserApiService;
 import com.jobly.util.HttpHeaderConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.AbstractResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,7 @@ public class CvService {
     
     private final UserService userService;
     private final CvDao cvDao;
+    private final CvParserApiService cvParserApiService;
 
     public CvUploadResponse uploadUserCv(Long userId, MultipartFile file){
         Resource cvFile = file.getResource();
@@ -39,6 +43,13 @@ public class CvService {
         existingCvs.forEach(cv -> cv.setStatus(CvStatus.INACTIVE));
         cvDao.saveAll(existingCvs);
 
+        try {
+            AbstractResource cvFileToParse = new ByteArrayResource(cvFile.getContentAsByteArray());
+            var response = cvParserApiService.parseCv(cvFileToParse);
+            log.info("CV parsed successfully: {}", response);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return CvMapper.toCvUploadResponse(cvDao.save(userCvEntity));
     }
 

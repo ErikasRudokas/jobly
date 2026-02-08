@@ -27,35 +27,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserRegisterResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '409':
-          description: Conflict
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConflictMessage'
+          $ref: '#/components/responses/Conflict'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /auth/login:
     post:
@@ -77,35 +57,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserLoginResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /auth/refresh:
     post:
@@ -127,29 +87,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/RefreshTokenResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /users/me:
     get:
@@ -167,23 +111,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetUserDetailsResponse'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /users/cv:
     post:
@@ -214,29 +146,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/CvUploadResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /users/cv/{id}:
     get:
@@ -262,35 +178,15 @@ paths:
                 type: string
                 format: binary
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /categories:
     get:
@@ -308,23 +204,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllCategoriesResponse'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /categories/{id}:
     get:
@@ -350,35 +234,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Category'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       summary: Delete category by ID
       tags:
@@ -398,35 +262,15 @@ paths:
         '204':
           description: Category deleted successfully
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
     put:
       summary: Update an existing category
       tags:
@@ -456,35 +300,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Category'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /categories/create:
     post:
@@ -508,29 +332,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Category'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /job-offers:
     get:
@@ -546,23 +354,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllJobOffersResponse'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /job-offers/{id}:
     get:
@@ -586,29 +382,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/JobOfferDetailsResponse'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
     put:
       summary: Update an existing job offer
       tags:
@@ -638,35 +418,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/JobOffer'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       summary: Delete job offer by ID
       tags:
@@ -686,35 +446,15 @@ paths:
         '204':
           description: Job offer deleted successfully
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /job-offers/mine:
     get:
@@ -732,23 +472,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetMineJobOffersResponse'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /job-offers/mine/{id}:
     get:
@@ -774,29 +502,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/JobOfferWithApplicationsResponse'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /job-offers/create:
     post:
@@ -820,29 +532,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/JobOffer'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /job-offers/{jobOfferId}/apply:
     post:
@@ -874,41 +570,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/Application'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '409':
-          description: Conflict
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConflictMessage'
+          $ref: '#/components/responses/Conflict'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /applications/mine:
     get:
@@ -926,23 +598,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetMyApplicationsResponse'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /applications/mine/{id}:
     get:
@@ -968,29 +628,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/MyApplication'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /applications/{id}/cancel:
     post:
@@ -1012,35 +656,15 @@ paths:
         '204':
           description: Application cancelled successfully
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /applications/{id}:
     put:
@@ -1072,35 +696,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Application'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /applications/{id}/manage:
     post:
@@ -1128,35 +732,15 @@ paths:
         '204':
           description: Application managed successfully
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundMessage'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+          $ref: '#/components/responses/InternalServerError'
 
   /job-offers/{jobOfferId}/can-apply:
     get:
@@ -1182,29 +766,55 @@ paths:
               schema:
                 $ref: '#/components/schemas/CanApplyResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestMessage'
+          $ref: '#/components/responses/BadRequest'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UnauthorizedMessage'
+          $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenMessage'
+          $ref: '#/components/responses/Forbidden'
         '500':
-          description: Internal Server Error
+          $ref: '#/components/responses/InternalServerError'
+
+  /skills:
+    get:
+      summary: Search skills by name
+      tags:
+        - Skills
+      operationId: searchSkills
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: value
+          in: query
+          schema:
+            type: string
+          description: The search term for skill names
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+          description: The number of items to skip before starting to collect the result set
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+          description: The numbers of items to return
+      responses:
+        '200':
+          description: A list of matching skills
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorMessage'
+                $ref: '#/components/schemas/SearchSkillsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
 components:
   securitySchemes:
@@ -1212,6 +822,48 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestMessage'
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedMessage'
+
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenMessage'
+
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFoundMessage'
+
+    Conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConflictMessage'
+
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InternalServerErrorMessage'
   schemas:
     DateTime:
       type: string
@@ -1530,6 +1182,10 @@ components:
           $ref: '#/components/schemas/JobOfferCategory'
         creator:
           $ref: '#/components/schemas/Creator'
+        skills:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobOfferSkill'
 
     WorkType:
       type: string
@@ -1664,6 +1320,43 @@ components:
           maxLength: 15
         categoryId:
           $ref: '#/components/schemas/SystemGeneratedId'
+        skills:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateJobOfferSkill'
+    
+    CreateJobOfferSkill:
+      type: object
+      properties:
+        skillId:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        proficiency:
+          $ref: '#/components/schemas/SkillProficiency'
+
+    JobOfferSkill:
+        type: object
+        properties:
+          skillId:
+            $ref: '#/components/schemas/SystemGeneratedId'
+          name:
+            type: string
+            example: Java Programming
+            maxLength: 64
+          type:
+            $ref: '#/components/schemas/SkillType'
+          proficiency:
+            $ref: '#/components/schemas/SkillProficiency'
+
+    UpdateJobOfferSkill:
+      type: object
+      properties:
+        skillId:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        proficiency:
+          $ref: '#/components/schemas/SkillProficiency'
+        delete:
+          type: boolean
+          example: false
 
     UpdateJobOfferRequest:
       type: object
@@ -1712,6 +1405,10 @@ components:
           maxLength: 15
         categoryId:
           $ref: '#/components/schemas/SystemGeneratedId'
+        skills:
+          type: array
+          items:
+            $ref: '#/components/schemas/UpdateJobOfferSkill'
 
     GetUserDetailsResponse:
       type: object
@@ -1832,3 +1529,34 @@ components:
         canApply:
           type: boolean
           example: true
+
+    SkillType:
+      type: string
+      enum: [ TECHNICAL, SOFT ]
+
+    SkillProficiency:
+        type: string
+        enum: [ BEGINNER, INTERMEDIATE, ADVANCED, EXPERT ]
+
+    SearchSkillsResponse:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 2
+        skills:
+          type: array
+          items:
+            $ref: '#/components/schemas/SkillDetails'
+
+    SkillDetails:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        name:
+          type: string
+          example: Java Programming
+          maxLength: 50
+        type:
+          $ref: '#/components/schemas/SkillType'

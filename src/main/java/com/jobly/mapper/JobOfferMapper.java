@@ -1,10 +1,7 @@
 package com.jobly.mapper;
 
 import com.jobly.gen.model.*;
-import com.jobly.model.ApplicationEntity;
-import com.jobly.model.CategoryEntity;
-import com.jobly.model.JobOfferEntity;
-import com.jobly.model.UserEntity;
+import com.jobly.model.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JobOfferMapper {
 
-    public static JobOffer toJobOffer(JobOfferEntity jobOfferEntity) {
+    public static JobOffer toJobOffer(JobOfferEntity jobOfferEntity, List<JobSkillEntity> skills) {
         var jobOffer = new JobOffer();
         jobOffer.setId(jobOfferEntity.getId());
         jobOffer.setTitle(jobOfferEntity.getTitle());
@@ -31,6 +28,7 @@ public class JobOfferMapper {
         jobOffer.setUpdatedAt(jobOfferEntity.getUpdatedAt());
         jobOffer.setCategory(CategoryMapper.toJobOfferCategory(jobOfferEntity.getCategory()));
         jobOffer.setCreator(UserMapper.toCreator(jobOfferEntity.getCreator()));
+        jobOffer.setSkills(skills.stream().map(SkillMapper::toJobOfferSkill).toList());
         return jobOffer;
     }
 
@@ -46,15 +44,15 @@ public class JobOfferMapper {
         return jobOfferListObject;
     }
 
-    public static JobOfferDetailsResponse toJobOfferDetailsResponse(JobOfferEntity jobOffer) {
+    public static JobOfferDetailsResponse toJobOfferDetailsResponse(JobOfferEntity jobOffer, List<JobSkillEntity> skills) {
         var jobOfferDetailsResponse = new JobOfferDetailsResponse();
-        jobOfferDetailsResponse.setJobOffer(toJobOffer(jobOffer));
+        jobOfferDetailsResponse.setJobOffer(toJobOffer(jobOffer, skills));
         return jobOfferDetailsResponse;
     }
 
-    public static JobOfferWithApplicationsResponse toJobOfferWithApplicationsResponse(JobOfferEntity jobOffer, List<ApplicationEntity> applications) {
+    public static JobOfferWithApplicationsResponse toJobOfferWithApplicationsResponse(JobOfferEntity jobOffer, List<ApplicationEntity> applications, List<JobSkillEntity> skills) {
         var response = new JobOfferWithApplicationsResponse();
-        response.setJobOffer(toJobOffer(jobOffer));
+        response.setJobOffer(toJobOffer(jobOffer, skills));
         response.setApplications(applications.stream().map(ApplicationMapper::toApplication).toList());
         return response;
     }
