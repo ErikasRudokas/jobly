@@ -194,7 +194,6 @@ INSERT INTO SKILL_ALIASES (SKILL_ID, ALIAS) VALUES
     (137, 'communication'),
     (137, 'comms'),
     (138, 'teamwork'),
-    (138, 'collaboration'),
     (139, 'leadership'),
     (140, 'problem solving'),
     (141, 'critical thinking'),

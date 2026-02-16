@@ -1,6 +1,8 @@
 package com.jobly.dao;
 
+import com.jobly.model.SkillAliasEntity;
 import com.jobly.model.SkillEntity;
+import com.jobly.repository.SkillAliasRepository;
 import com.jobly.repository.SkillRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +10,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -16,6 +21,7 @@ import java.util.Set;
 public class SkillDao {
 
     private final SkillRepository skillRepository;
+    private final SkillAliasRepository skillAliasRepository;
 
     public List<SkillEntity> searchSkills(String value, Integer offset, Integer limit) {
         log.info("Searching skills in the database with value: {}", value);
@@ -31,5 +37,15 @@ public class SkillDao {
 
     public Set<SkillEntity> findAllByIds(List<Long> ids) {
         return new HashSet<>(skillRepository.findAllById(ids));
+    }
+
+    public Map<String, SkillAliasEntity> findAllSkillAliases() {
+        List<SkillAliasEntity> skillAliases = skillAliasRepository.findAll();
+        return skillAliases.stream()
+                .collect(
+                        Collectors.toMap(
+                                SkillAliasEntity::getAlias,
+                                Function.identity())
+                );
     }
 }

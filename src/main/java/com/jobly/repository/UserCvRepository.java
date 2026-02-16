@@ -14,4 +14,6 @@ public interface UserCvRepository extends JpaRepository<UserCvEntity, Long> {
     List<UserCvEntity> findAllByUserId(Long userId);
 
     Optional<UserCvEntity> findByUserIdAndStatus(Long userId, CvStatus cvStatus);
+
+    boolean existsByUserId(Long userId);
 }

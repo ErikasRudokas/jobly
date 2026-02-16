@@ -117,6 +117,56 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /users/profile:
+    get:
+      summary: Get authenticated user's work experience, education and skills
+      tags:
+        - User Details
+      operationId: getUserProfile
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserProfileResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Update authenticated user's work experience, education and skills
+      tags:
+          - User Details
+      operationId: saveUserProfile
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveUserProfileRequest'
+      responses:
+        '200':
+          description: User profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserProfileResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /users/cv:
     post:
       summary: Upload a CV for the authenticated user
@@ -1334,18 +1384,18 @@ components:
           $ref: '#/components/schemas/SkillProficiency'
 
     JobOfferSkill:
-        type: object
-        properties:
-          skillId:
-            $ref: '#/components/schemas/SystemGeneratedId'
-          name:
-            type: string
-            example: Java Programming
-            maxLength: 64
-          type:
-            $ref: '#/components/schemas/SkillType'
-          proficiency:
-            $ref: '#/components/schemas/SkillProficiency'
+      type: object
+      properties:
+        skillId:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        name:
+          type: string
+          example: Java Programming
+          maxLength: 64
+        type:
+          $ref: '#/components/schemas/SkillType'
+        proficiency:
+          $ref: '#/components/schemas/SkillProficiency'
 
     UpdateJobOfferSkill:
       type: object
@@ -1535,8 +1585,8 @@ components:
       enum: [ TECHNICAL, SOFT ]
 
     SkillProficiency:
-        type: string
-        enum: [ BEGINNER, INTERMEDIATE, ADVANCED, EXPERT ]
+      type: string
+      enum: [ BEGINNER, INTERMEDIATE, ADVANCED, EXPERT ]
 
     SearchSkillsResponse:
       type: object
@@ -1560,3 +1610,146 @@ components:
           maxLength: 50
         type:
           $ref: '#/components/schemas/SkillType'
+
+    CVDataStatus:
+      type: string
+      enum: [ AI_PARSED, USER_REVIEWED ]
+
+    GetUserProfileResponse:
+      type: object
+      properties:
+        workExperience:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserWorkExperience'
+        education:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserEducation'
+        skills:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSkill'
+
+    UserWorkExperience:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        companyName:
+          type: string
+          example: Tech Solutions Inc.
+          maxLength: 255
+        designation:
+          type: string
+          example: Software Engineer
+          maxLength: 255
+        startDate:
+          $ref: '#/components/schemas/DateTime'
+        endDate:
+          $ref: '#/components/schemas/DateTime'
+        status:
+          $ref: '#/components/schemas/CVDataStatus'
+
+    UserEducation:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        institutionName:
+          type: string
+          example: University of Technology
+          maxLength: 255
+        degree:
+          type: string
+          example: Bachelor of Science in Computer Science
+          maxLength: 255
+        startDate:
+          $ref: '#/components/schemas/DateTime'
+        endDate:
+          $ref: '#/components/schemas/DateTime'
+        status:
+          $ref: '#/components/schemas/CVDataStatus'
+
+    UserSkill:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        proficiencyLevel:
+          $ref: '#/components/schemas/SkillProficiency'
+        status:
+          $ref: '#/components/schemas/CVDataStatus'
+        skill:
+          $ref: '#/components/schemas/SkillDetails'
+
+    SaveUserProfileRequest:
+      type: object
+      properties:
+        workExperience:
+          type: array
+          items:
+            $ref: '#/components/schemas/SaveUserWorkExperienceRequest'
+        education:
+          type: array
+          items:
+            $ref: '#/components/schemas/SaveUserEducationRequest'
+        skills:
+          type: array
+          items:
+            $ref: '#/components/schemas/SaveUserSkillRequest'
+
+    SaveUserWorkExperienceRequest:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        delete:
+          type: boolean
+          example: false
+        companyName:
+          type: string
+          example: Tech Solutions Inc.
+          maxLength: 255
+        designation:
+          type: string
+          example: Software Engineer
+          maxLength: 255
+        startDate:
+          $ref: '#/components/schemas/DateTime'
+        endDate:
+          $ref: '#/components/schemas/DateTime'
+
+    SaveUserEducationRequest:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        delete:
+          type: boolean
+          example: false
+        institutionName:
+          type: string
+          example: University of Technology
+          maxLength: 255
+        degree:
+          type: string
+          example: Bachelor of Science in Computer Science
+          maxLength: 255
+        startDate:
+          $ref: '#/components/schemas/DateTime'
+        endDate:
+          $ref: '#/components/schemas/DateTime'
+
+    SaveUserSkillRequest:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        delete:
+          type: boolean
+          example: false
+        proficiencyLevel:
+          $ref: '#/components/schemas/SkillProficiency'
+        skillId:
+          $ref: '#/components/schemas/SystemGeneratedId'
