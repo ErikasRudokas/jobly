@@ -43,10 +43,7 @@ public class UserProfileValidator {
                     if (education.getStartDate() == null) {
                         throw new BadRequestException("Start date is required for education");
                     }
-                    if (education.getEndDate() == null) {
-                        throw new BadRequestException("End date is required for education");
-                    }
-                    if (education.getStartDate().isAfter(education.getEndDate())) {
+                    if (education.getEndDate() != null && education.getStartDate().isAfter(education.getEndDate())) {
                         throw new BadRequestException("Start date cannot be after end date for education");
                     }
                 });
@@ -65,10 +62,7 @@ public class UserProfileValidator {
                     if (workExperience.getStartDate() == null) {
                         throw new BadRequestException("Start date is required for work experience");
                     }
-                    if (workExperience.getEndDate() == null) {
-                        throw new BadRequestException("End date is required for work experience");
-                    }
-                    if (workExperience.getStartDate().isAfter(workExperience.getEndDate())) {
+                    if (workExperience.getEndDate() != null && workExperience.getStartDate().isAfter(workExperience.getEndDate())) {
                         throw new BadRequestException("Start date cannot be after end date for work experience");
                     }
                 });
