@@ -3,8 +3,11 @@ package com.jobly.handler;
 import com.jobly.gen.api.UsersApiDelegate;
 import com.jobly.gen.model.CvUploadResponse;
 import com.jobly.gen.model.GetUserDetailsResponse;
+import com.jobly.gen.model.GetUserProfileResponse;
+import com.jobly.gen.model.SaveUserProfileRequest;
 import com.jobly.security.service.JwtService;
 import com.jobly.service.CvService;
+import com.jobly.service.UserProfileService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,7 @@ public class UsersApiHandler implements UsersApiDelegate {
     private final HttpServletRequest httpServletRequest;
     private final JwtService jwtService;
     private final CvService cvService;
+    private final UserProfileService userProfileService;
 
     @Override
     public ResponseEntity<GetUserDetailsResponse> getUserDetails() {
@@ -41,5 +45,19 @@ public class UsersApiHandler implements UsersApiDelegate {
         Long userId = jwtService.extractUserId(httpServletRequest);
         log.info("Downloading CV with id: {}", id);
         return cvService.downloadUserCv(id, userId);
+    }
+
+    @Override
+    public ResponseEntity<GetUserProfileResponse> getUserProfile() {
+        Long userId = jwtService.extractUserId(httpServletRequest);
+        log.info("Getting user profile for userId: {}", userId);
+        return ResponseEntity.ok(userProfileService.getUserProfile(userId));
+    }
+
+    @Override
+    public ResponseEntity<GetUserProfileResponse> saveUserProfile(SaveUserProfileRequest saveUserProfileRequest) {
+        Long userId = jwtService.extractUserId(httpServletRequest);
+        log.info("Saving user profile for userId: {}", userId);
+        return ResponseEntity.ok(userProfileService.saveUserProfile(userId, saveUserProfileRequest));
     }
 }

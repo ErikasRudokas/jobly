@@ -42,4 +42,8 @@ public class CvDao {
     public UserCvEntity findOptionalByUserIdAndStatus(Long userId, CvStatus cvStatus) {
         return userCvRepository.findByUserIdAndStatus(userId, cvStatus).orElse(null);
     }
+
+    public boolean existsByUserId(Long userId) {
+        return userCvRepository.existsByUserId(userId);
+    }
 }

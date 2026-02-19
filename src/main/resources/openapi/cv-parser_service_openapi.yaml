@@ -45,6 +45,11 @@ components:
 
     CvParseResponse:
       type: object
+      required:
+        - personalDetails
+        - education
+        - workExperience
+        - skills
       properties:
         personalDetails:
           $ref: '#/components/schemas/PersonalDetails'
@@ -59,7 +64,7 @@ components:
         skills:
           type: array
           items:
-              type: string
+            type: string
 
     PersonalDetails:
       type: object
@@ -74,12 +79,8 @@ components:
       properties:
         institution:
           type: string
-        startDate:
+        degree:
           type: string
-          format: date
-        endDate:
-          type: string
-          format: date
 
     WorkExperience:
       type: object
@@ -88,9 +89,3 @@ components:
           type: string
         designation:
           type: string
-        startDate:
-          type: string
-          format: date
-        endDate:
-          type: string
-          format: date

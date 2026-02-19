@@ -9,6 +9,7 @@ import com.jobly.mapper.CvMapper;
 import com.jobly.mapper.UserMapper;
 import com.jobly.model.UserCvEntity;
 import com.jobly.service.api.CvParserApiService;
+import com.jobly.service.handler.CvParseHandler;
 import com.jobly.util.HttpHeaderConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +33,9 @@ public class CvService {
     private final UserService userService;
     private final CvDao cvDao;
     private final CvParserApiService cvParserApiService;
+    private final CvParseHandler cvParseHandler;
 
-    public CvUploadResponse uploadUserCv(Long userId, MultipartFile file){
+    public CvUploadResponse uploadUserCv(Long userId, MultipartFile file) {
         Resource cvFile = file.getResource();
         var user = userService.findById(userId);
 
@@ -44,13 +46,22 @@ public class CvService {
         cvDao.saveAll(existingCvs);
 
         try {
-            AbstractResource cvFileToParse = new ByteArrayResource(cvFile.getContentAsByteArray());
+            AbstractResource cvFileToParse = getCvFileToParse(cvFile, userCvEntity);
             var response = cvParserApiService.parseCv(cvFileToParse);
-            log.info("CV parsed successfully: {}", response);
+            cvParseHandler.saveParsedCvData(userCvEntity, response);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return CvMapper.toCvUploadResponse(cvDao.save(userCvEntity));
+    }
+
+    private static AbstractResource getCvFileToParse(Resource cvFile, UserCvEntity userCvEntity) throws IOException {
+        return new ByteArrayResource(cvFile.getContentAsByteArray()) {
+            @Override
+            public String getFilename() {
+                return userCvEntity.getTitle();
+            }
+        };
     }
 
     public ResponseEntity<Resource> downloadUserCv(Long cvId, Long userId) {

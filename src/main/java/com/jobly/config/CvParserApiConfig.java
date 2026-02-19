@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.AbstractResource;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Configuration
@@ -52,8 +51,7 @@ public class CvParserApiConfig {
     private List<Education> generateEducationHistory() {
         Education education1 = new Education()
                 .institution("Massachusetts Institute of Technology")
-                .startDate(LocalDate.of(2016, 9, 1))
-                .endDate(LocalDate.of(2020, 6, 30));
+                .degree("Bachelor of Science in Computer Science");
 
         Education education2 = new Education()
                 .institution("Stanford University");
@@ -64,13 +62,11 @@ public class CvParserApiConfig {
     private List<WorkExperience> generateWorkExperience() {
         WorkExperience experience1 = new WorkExperience()
                 .company("Google")
-                .designation("Software Engineer")
-                .startDate(LocalDate.of(2020, 7, 1))
-                .endDate(LocalDate.of(2023, 3, 31));
+                .designation("Software Engineer");
 
         WorkExperience experience2 = new WorkExperience()
                 .company("Startup XYZ")
-                .startDate(LocalDate.of(2023, 4, 1));
+                .designation("Backend Developer");
 
         WorkExperience experience3 = new WorkExperience()
                 .company("Freelance");
@@ -86,7 +82,7 @@ public class CvParserApiConfig {
                 "basic knowldge of docker & kubernetes",
                 "good undestanding of sql databases",
                 "have used aws s3 and ec2 a bit",
-                "team player, good comunication skills"
+                "team player, good communication skills"
         );
     }
 }
