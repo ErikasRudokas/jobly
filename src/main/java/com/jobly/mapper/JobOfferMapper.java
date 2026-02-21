@@ -50,13 +50,6 @@ public class JobOfferMapper {
         return jobOfferDetailsResponse;
     }
 
-    public static JobOfferWithApplicationsResponse toJobOfferWithApplicationsResponse(JobOfferEntity jobOffer, List<ApplicationEntity> applications, List<JobSkillEntity> skills) {
-        var response = new JobOfferWithApplicationsResponse();
-        response.setJobOffer(toJobOffer(jobOffer, skills));
-        response.setApplications(applications.stream().map(ApplicationMapper::toApplication).toList());
-        return response;
-    }
-
     public static JobOfferEntity toJobOfferEntity(CreateJobOfferRequest createJobOfferRequest, UserEntity user, CategoryEntity category) {
         var jobOfferEntity = new JobOfferEntity();
         jobOfferEntity.setTitle(createJobOfferRequest.getTitle());

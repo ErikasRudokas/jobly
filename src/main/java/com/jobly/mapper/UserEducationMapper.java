@@ -4,6 +4,7 @@ import com.jobly.gen.api.parser.data.Education;
 import com.jobly.gen.model.CVDataStatus;
 import com.jobly.gen.model.SaveUserEducationRequest;
 import com.jobly.gen.model.UserEducation;
+import com.jobly.gen.model.UserEducationBase;
 import com.jobly.model.UserEducationEntity;
 import com.jobly.model.UserEntity;
 import jakarta.validation.Valid;
@@ -51,5 +52,15 @@ public class UserEducationMapper {
         existing.setStartDate(education.getStartDate());
         existing.setEndDate(education.getEndDate());
         existing.setStatus(CVDataStatus.USER_REVIEWED);
+    }
+
+    public static UserEducationBase fromEntityToBaseResponse(UserEducationEntity userEducationEntity) {
+        UserEducationBase userEducationBase = new UserEducationBase();
+        userEducationBase.setInstitutionName(userEducationEntity.getInstitutionName());
+        userEducationBase.setDegree(userEducationEntity.getDegree());
+        userEducationBase.setStartDate(userEducationEntity.getStartDate());
+        userEducationBase.setEndDate(userEducationEntity.getEndDate());
+        userEducationBase.setStatus(userEducationEntity.getStatus());
+        return userEducationBase;
     }
 }

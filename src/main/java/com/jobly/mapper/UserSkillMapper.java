@@ -3,6 +3,7 @@ package com.jobly.mapper;
 import com.jobly.gen.model.CVDataStatus;
 import com.jobly.gen.model.SaveUserSkillRequest;
 import com.jobly.gen.model.UserSkill;
+import com.jobly.gen.model.UserSkillBase;
 import com.jobly.model.SkillEntity;
 import com.jobly.model.UserEntity;
 import com.jobly.model.UserSkillEntity;
@@ -43,5 +44,13 @@ public class UserSkillMapper {
     public static void updateEntity(UserSkillEntity existing, SaveUserSkillRequest skillRequest) {
         existing.setProficiencyLevel(skillRequest.getProficiencyLevel());
         existing.setStatus(CVDataStatus.USER_REVIEWED);
+    }
+
+    public static UserSkillBase fromEntityToBaseResponse(UserSkillEntity userSkillEntity) {
+        UserSkillBase userSkillBase = new UserSkillBase();
+        userSkillBase.setStatus(userSkillEntity.getStatus());
+        userSkillBase.setProficiencyLevel(userSkillEntity.getProficiencyLevel());
+        userSkillBase.setSkill(SkillMapper.toSkillDetails(userSkillEntity.getSkill()));
+        return userSkillBase;
     }
 }

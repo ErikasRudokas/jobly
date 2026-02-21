@@ -167,6 +167,35 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /users/{userId}/profile:
+    get:
+      summary: Get user's work experience, education and skills by user ID (for job offer owners to view applicants' profiles)
+      tags:
+        - User Details
+      operationId: getUserProfileById
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            $ref: '#/components/schemas/SystemGeneratedId'
+          description: The ID of the user whose profile is to be retrieved
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserProfileByIdResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /users/cv:
     post:
       summary: Upload a CV for the authenticated user
@@ -1631,11 +1660,25 @@ components:
           items:
             $ref: '#/components/schemas/UserSkill'
 
-    UserWorkExperience:
+    GetUserProfileByIdResponse:
       type: object
       properties:
-        id:
-          $ref: '#/components/schemas/SystemGeneratedId'
+        workExperience:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserWorkExperienceBase'
+        education:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserEducationBase'
+        skills:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSkillBase'
+
+    UserWorkExperienceBase:
+      type: object
+      properties:
         companyName:
           type: string
           example: Tech Solutions Inc.
@@ -1651,11 +1694,9 @@ components:
         status:
           $ref: '#/components/schemas/CVDataStatus'
 
-    UserEducation:
+    UserEducationBase:
       type: object
       properties:
-        id:
-          $ref: '#/components/schemas/SystemGeneratedId'
         institutionName:
           type: string
           example: University of Technology
@@ -1671,17 +1712,39 @@ components:
         status:
           $ref: '#/components/schemas/CVDataStatus'
 
-    UserSkill:
+    UserSkillBase:
       type: object
       properties:
-        id:
-          $ref: '#/components/schemas/SystemGeneratedId'
         proficiencyLevel:
           $ref: '#/components/schemas/SkillProficiency'
         status:
           $ref: '#/components/schemas/CVDataStatus'
         skill:
           $ref: '#/components/schemas/SkillDetails'
+
+    UserWorkExperience:
+      allOf:
+        - $ref: '#/components/schemas/UserWorkExperienceBase'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/SystemGeneratedId'
+
+    UserEducation:
+      allOf:
+        - $ref: '#/components/schemas/UserEducationBase'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/SystemGeneratedId'
+
+    UserSkill:
+      allOf:
+        - $ref: '#/components/schemas/UserSkillBase'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/SystemGeneratedId'
 
     SaveUserProfileRequest:
       type: object

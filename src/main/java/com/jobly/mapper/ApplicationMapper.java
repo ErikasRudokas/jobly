@@ -10,23 +10,22 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApplicationMapper {
-    public static ApplicationEntity toApplicationEntity(ApplicationCreateRequest request, UserEntity applicant, JobOfferEntity jobOffer, UserCvEntity cv) {
+    public static ApplicationEntity toApplicationEntity(ApplicationCreateRequest request, UserEntity applicant, JobOfferEntity jobOffer) {
         var applicationEntity = new ApplicationEntity();
         applicationEntity.setStatus(ApplicationStatus.PENDING);
         applicationEntity.setComment(request.getComment());
         applicationEntity.setApplicant(applicant);
         applicationEntity.setJobOffer(jobOffer);
-        applicationEntity.setUserCv(cv);
         return applicationEntity;
     }
 
-    public static Application toApplication(ApplicationEntity applicationEntity) {
+    public static Application toApplication(ApplicationEntity applicationEntity, Long cvId) {
         var application = new Application();
         application.setId(applicationEntity.getId());
         application.setComment(applicationEntity.getComment());
         application.setCreatedAt(applicationEntity.getCreatedAt());
         application.setUpdatedAt(applicationEntity.getUpdatedAt());
-        application.setCvId(applicationEntity.getUserCv().getId());
+        application.setCvId(cvId);
         application.setApplicationStatus(applicationEntity.getStatus());
         application.setApplicant(UserMapper.toApplicant(applicationEntity.getApplicant()));
         return application;
@@ -41,7 +40,7 @@ public class ApplicationMapper {
         return applicationListObject;
     }
 
-    public static MyApplication toMyApplication(ApplicationEntity application) {
+    public static MyApplication toMyApplication(ApplicationEntity application, Long cvId) {
         var myApplication = new MyApplication();
         myApplication.setId(application.getId());
         myApplication.setComment(application.getComment());
@@ -49,7 +48,7 @@ public class ApplicationMapper {
         myApplication.setCreatedAt(application.getCreatedAt());
         myApplication.setUpdatedAt(application.getUpdatedAt());
         myApplication.setJobOffer(JobOfferMapper.toJobOfferListObject(application.getJobOffer()));
-        myApplication.setCvId(application.getUserCv().getId());
+        myApplication.setCvId(cvId);
         return myApplication;
     }
 }
