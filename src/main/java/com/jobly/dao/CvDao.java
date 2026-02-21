@@ -46,4 +46,10 @@ public class CvDao {
     public boolean existsByUserId(Long userId) {
         return userCvRepository.existsByUserId(userId);
     }
+
+    public UserCvEntity findMostRecentCv(Long userId) {
+        return userCvRepository.findAllByUserIdAndStatusOrderByUploadedAtDesc(userId, CvStatus.ACTIVE).stream()
+                .findFirst()
+                .orElse(null);
+    }
 }

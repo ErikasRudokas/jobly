@@ -4,6 +4,7 @@ import com.jobly.gen.api.parser.data.WorkExperience;
 import com.jobly.gen.model.CVDataStatus;
 import com.jobly.gen.model.SaveUserWorkExperienceRequest;
 import com.jobly.gen.model.UserWorkExperience;
+import com.jobly.gen.model.UserWorkExperienceBase;
 import com.jobly.model.UserEntity;
 import com.jobly.model.UserWorkExperienceEntity;
 import jakarta.validation.Valid;
@@ -52,5 +53,15 @@ public class UserWorkExperienceMapper {
         existing.setStartDate(workExperience.getStartDate());
         existing.setEndDate(workExperience.getEndDate());
         existing.setStatus(CVDataStatus.USER_REVIEWED);
+    }
+
+    public static UserWorkExperienceBase fromEntityToBaseResponse(UserWorkExperienceEntity userWorkExperienceEntity) {
+        UserWorkExperienceBase userWorkExperienceBase = new UserWorkExperienceBase();
+        userWorkExperienceBase.setCompanyName(userWorkExperienceEntity.getCompanyName());
+        userWorkExperienceBase.setDesignation(userWorkExperienceEntity.getDesignation());
+        userWorkExperienceBase.setStartDate(userWorkExperienceEntity.getStartDate());
+        userWorkExperienceBase.setEndDate(userWorkExperienceEntity.getEndDate());
+        userWorkExperienceBase.setStatus(userWorkExperienceEntity.getStatus());
+        return userWorkExperienceBase;
     }
 }

@@ -1,18 +1,13 @@
 package com.jobly.service;
 
-import com.jobly.dao.ApplicationDao;
-import com.jobly.dao.JobOfferDao;
-import com.jobly.dao.JobSkillDao;
-import com.jobly.dao.SkillDao;
+import com.jobly.dao.*;
 import com.jobly.exception.general.BadRequestException;
 import com.jobly.exception.general.ForbiddenException;
 import com.jobly.gen.model.*;
 import com.jobly.mapper.ApplicationMapper;
 import com.jobly.mapper.JobOfferMapper;
 import com.jobly.mapper.JobSkillMapper;
-import com.jobly.model.JobOfferEntity;
-import com.jobly.model.JobSkillEntity;
-import com.jobly.model.SkillEntity;
+import com.jobly.model.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,10 +26,11 @@ public class JobOfferService {
     private final JobOfferDao jobOfferDao;
     private final UserService userService;
     private final CategoryService categoryService;
-    private final CvService cvService;
     private final ApplicationDao applicationDao;
     private final JobSkillDao jobSkillDao;
     private final SkillDao skillDao;
+    private final CvDao cvDao;
+    private final UserProfileService userProfileService;
 
     public GetAllJobOffersResponse findAll() {
         var jobOffers = jobOfferDao.findAll().stream()
@@ -71,7 +67,25 @@ public class JobOfferService {
         }
         var applications = applicationDao.findAllPendingByJobOfferId(id);
         var jobSkills = jobSkillDao.findAllByJobOfferId(id);
-        return JobOfferMapper.toJobOfferWithApplicationsResponse(jobOffer, applications, jobSkills);
+        var response = new JobOfferWithApplicationsResponse();
+        response.setJobOffer(JobOfferMapper.toJobOffer(jobOffer, jobSkills));
+        response.setApplications(getApplicationsOfJobOffer(applications));
+        return response;
+    }
+
+    private List<Application> getApplicationsOfJobOffer(List<ApplicationEntity> applications) {
+        return applications.stream()
+                .map(application -> {
+                    UserCvEntity mostRecentCv = cvDao.findMostRecentCv(application.getApplicant().getId());
+                    return ApplicationMapper.toApplication(application, getCvId(mostRecentCv));
+                })
+                .toList();
+    }
+
+    private static Long getCvId(UserCvEntity mostRecentCv) {
+        return Optional.ofNullable(mostRecentCv)
+                .map(UserCvEntity::getId)
+                .orElse(null);
     }
 
     @PreAuthorize("hasRole('EMPLOYER')")
@@ -190,14 +204,27 @@ public class JobOfferService {
     public Application applyToJobOffer(Long jobOfferId, Long userId, ApplicationCreateRequest applicationCreateRequest) {
         var applicant = userService.findById(userId);
         var jobOffer = jobOfferDao.findById(jobOfferId);
-        var userCv = cvService.findActiveCvByUserId(userId);
+        UserCvEntity mostRecentCv = cvDao.findMostRecentCv(userId);
 
+        validateUserIsAllowedToApply(jobOfferId, userId, mostRecentCv);
+
+        var application = ApplicationMapper.toApplicationEntity(applicationCreateRequest, applicant, jobOffer);
+        ApplicationEntity savedApplication = applicationDao.saveApplication(application);
+        return ApplicationMapper.toApplication(savedApplication, getCvId(mostRecentCv));
+    }
+
+    private void validateUserIsAllowedToApply(Long jobOfferId, Long userId, UserCvEntity mostRecentCv) {
         if (applicationDao.isUserAlreadyAppliedToJobOffer(userId, jobOfferId)) {
             throw new BadRequestException("User has already applied to this job offer");
         }
 
-        var application = ApplicationMapper.toApplicationEntity(applicationCreateRequest, applicant, jobOffer, userCv);
-        return ApplicationMapper.toApplication(applicationDao.saveApplication(application));
+        if (mostRecentCv == null && !userProfileService.isUserProfileSetUp(userId)) {
+            throw new BadRequestException("User must have a CV or a set up profile to apply to a job offer");
+        }
+
+        if (!userProfileService.isUserProfileReviewed(userId)) {
+            throw new BadRequestException("To apply for a job AI parsed profile information needs to be reviewed and updated if necessary");
+        }
     }
 
     @PreAuthorize("hasRole('USER')")

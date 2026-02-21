@@ -1,6 +1,7 @@
 package com.jobly.service;
 
 import com.jobly.dao.*;
+import com.jobly.enums.Role;
 import com.jobly.exception.general.BadRequestException;
 import com.jobly.exception.general.ForbiddenException;
 import com.jobly.gen.model.*;
@@ -10,6 +11,7 @@ import com.jobly.mapper.UserWorkExperienceMapper;
 import com.jobly.model.*;
 import com.jobly.service.validator.UserProfileValidator;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -262,5 +264,64 @@ public class UserProfileService {
                                                                           SaveUserWorkExperienceRequest workExperience) {
         return Optional.ofNullable(existingWorkExperienceMap.get(workExperience.getId()))
                 .orElseThrow(() -> new ForbiddenException("Work experience does not belong to user"));
+    }
+
+    @PreAuthorize("hasRole('EMPLOYER')")
+    public GetUserProfileByIdResponse getUserProfileById(Long userId) {
+        UserEntity userEntity = userDao.findById(userId);
+        if (!Role.USER.equals(userEntity.getRole())) {
+            throw new ForbiddenException("User with id " + userId + " is not a job seeker");
+        }
+
+        List<UserSkillEntity> userSkills = userSkillDao.findAllByUserId(userId);
+        List<UserEducationEntity> userEducation = userEducationDao.findAllByUserId(userId);
+        List<UserWorkExperienceEntity> userWorkExperience = userWorkExperienceDao.findAllByUserId(userId);
+
+        GetUserProfileByIdResponse response = new GetUserProfileByIdResponse();
+        response.setSkills(getUserSkillResponseById(userSkills));
+        response.setEducation(getUserEducationResponseById(userEducation));
+        response.setWorkExperience(getUserWorkExperienceResponseById(userWorkExperience));
+        return response;
+    }
+
+    private List<UserSkillBase> getUserSkillResponseById(List<UserSkillEntity> userSkills) {
+        return userSkills.stream()
+                .map(UserSkillMapper::fromEntityToBaseResponse)
+                .toList();
+    }
+
+    private List<UserEducationBase> getUserEducationResponseById(List<UserEducationEntity> userEducation) {
+        return userEducation.stream()
+                .map(UserEducationMapper::fromEntityToBaseResponse)
+                .toList();
+    }
+
+    private List<UserWorkExperienceBase> getUserWorkExperienceResponseById(List<UserWorkExperienceEntity> userWorkExperience) {
+        return userWorkExperience.stream()
+                .map(UserWorkExperienceMapper::fromEntityToBaseResponse)
+                .toList();
+    }
+
+    public boolean isUserProfileSetUp(Long userId) {
+        return userSkillDao.existsByUserId(userId) ||
+                userEducationDao.existsByUserId(userId) ||
+                userWorkExperienceDao.existsByUserId(userId);
+    }
+
+    public boolean isUserProfileReviewed(Long userId) {
+        List<UserSkillEntity> userSkills = userSkillDao.findAllByUserId(userId);
+        List<UserEducationEntity> userEducation = userEducationDao.findAllByUserId(userId);
+        List<UserWorkExperienceEntity> userWorkExperience = userWorkExperienceDao.findAllByUserId(userId);
+
+        boolean hasUnreviewedSkills = userSkills.stream()
+                .anyMatch(skill -> CVDataStatus.AI_PARSED.equals(skill.getStatus()));
+
+        boolean hasUnreviewedEducation = userEducation.stream()
+                .anyMatch(education -> CVDataStatus.AI_PARSED.equals(education.getStatus()));
+
+        boolean hasUnreviewedWorkExperience = userWorkExperience.stream()
+                .anyMatch(workExperience -> CVDataStatus.AI_PARSED.equals(workExperience.getStatus()));
+
+        return !(hasUnreviewedSkills || hasUnreviewedEducation || hasUnreviewedWorkExperience);
     }
 }

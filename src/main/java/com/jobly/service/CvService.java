@@ -79,6 +79,7 @@ public class CvService {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())
+                .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION)
                 .contentLength(fileData.length)
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(resource);

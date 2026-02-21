@@ -1,10 +1,7 @@
 package com.jobly.handler;
 
 import com.jobly.gen.api.UsersApiDelegate;
-import com.jobly.gen.model.CvUploadResponse;
-import com.jobly.gen.model.GetUserDetailsResponse;
-import com.jobly.gen.model.GetUserProfileResponse;
-import com.jobly.gen.model.SaveUserProfileRequest;
+import com.jobly.gen.model.*;
 import com.jobly.security.service.JwtService;
 import com.jobly.service.CvService;
 import com.jobly.service.UserProfileService;
@@ -59,5 +56,11 @@ public class UsersApiHandler implements UsersApiDelegate {
         Long userId = jwtService.extractUserId(httpServletRequest);
         log.info("Saving user profile for userId: {}", userId);
         return ResponseEntity.ok(userProfileService.saveUserProfile(userId, saveUserProfileRequest));
+    }
+
+    @Override
+    public ResponseEntity<GetUserProfileByIdResponse> getUserProfileById(Long userId) {
+        log.info("Getting user profile by id: {}", userId);
+        return ResponseEntity.ok(userProfileService.getUserProfileById(userId));
     }
 }

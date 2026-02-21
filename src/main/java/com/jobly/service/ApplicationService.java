@@ -1,14 +1,18 @@
 package com.jobly.service;
 
 import com.jobly.dao.ApplicationDao;
+import com.jobly.dao.CvDao;
 import com.jobly.exception.general.BadRequestException;
 import com.jobly.exception.general.ForbiddenException;
 import com.jobly.gen.model.*;
 import com.jobly.mapper.ApplicationMapper;
+import com.jobly.model.UserCvEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +21,7 @@ public class ApplicationService {
 
     private final ApplicationDao applicationDao;
     private final UserService userService;
+    private final CvDao cvDao;
 
     @PreAuthorize("hasRole('USER')")
     public GetMyApplicationsResponse getMyApplications(Long userId) {
@@ -32,7 +37,14 @@ public class ApplicationService {
     @PreAuthorize("hasRole('USER')")
     public MyApplication getMyApplication(Long applicationId, Long userId) {
         var application = applicationDao.findApplicationOfUser(userId, applicationId);
-        return ApplicationMapper.toMyApplication(application);
+        UserCvEntity mostRecentCv = cvDao.findMostRecentCv(userId);
+        return ApplicationMapper.toMyApplication(application, getCvId(mostRecentCv));
+    }
+
+    private static Long getCvId(UserCvEntity mostRecentCv) {
+        return Optional.ofNullable(mostRecentCv)
+                .map(UserCvEntity::getId)
+                .orElse(null);
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -46,15 +58,16 @@ public class ApplicationService {
     }
 
     @PreAuthorize("hasRole('USER')")
-    public Application updateApplication(Long applicatioId, Long userId, ApplicationUpdateRequest request) {
-        var application = applicationDao.findApplicationOfUser(userId, applicatioId);
+    public Application updateApplication(Long applicationId, Long userId, ApplicationUpdateRequest request) {
+        var application = applicationDao.findApplicationOfUser(userId, applicationId);
         if (!ApplicationStatus.PENDING.equals(application.getStatus())) {
             throw new BadRequestException("Only pending applications can be updated");
         }
 
         application.setComment(request.getComment());
         applicationDao.save(application);
-        return ApplicationMapper.toApplication(application);
+        UserCvEntity mostRecentCv = cvDao.findMostRecentCv(userId);
+        return ApplicationMapper.toApplication(application, getCvId(mostRecentCv));
     }
 
     @PreAuthorize("hasRole('EMPLOYER')")

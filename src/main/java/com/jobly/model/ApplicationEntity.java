@@ -47,8 +47,4 @@ public class ApplicationEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "APPLICANT_ID", nullable = false)
     private UserEntity applicant;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CV_ID", nullable = false)
-    private UserCvEntity userCv;
 }
