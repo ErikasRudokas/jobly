@@ -40,12 +40,20 @@ public class ApplicationDao {
                 .orElseThrow(() -> new NotFoundException("Application not found"));
     }
 
-    public List<ApplicationEntity> findAllPendingByJobOfferId(Long id) {
-        return applicationRepository.findAllByJobOfferIdAndStatus(id, ApplicationStatus.PENDING);
+    public Integer getCountOfAllPendingByJobOfferId(Long jobOfferId) {
+        return applicationRepository.countAllByJobOfferIdAndStatus(jobOfferId, ApplicationStatus.PENDING);
+    }
+
+    public Integer getCountOfAllApplicationsByJobOfferId(Long jobOfferId) {
+        return applicationRepository.countAllByJobOfferId(jobOfferId);
     }
 
     public boolean isUserAlreadyAppliedToJobOffer(Long userId, Long jobOfferId) {
         return applicationRepository.existsByApplicantIdAndJobOfferIdAndStatusIn(userId, jobOfferId,
                 List.of(ApplicationStatus.ACCEPTED, ApplicationStatus.PENDING, ApplicationStatus.REJECTED));
+    }
+
+    public List<ApplicationEntity> findAllApplicationsByJobOffer(Long jobOfferId) {
+        return applicationRepository.findAllByJobOfferId(jobOfferId);
     }
 }

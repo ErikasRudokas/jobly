@@ -91,6 +91,12 @@ public class JwtService {
         return extractClaim(token, claims -> claims.get(USER_ID_CLAIM_KEY, Long.class));
     }
 
+    public Long extractUserIdOrNull(HttpServletRequest request) {
+        var token = extractTokenFromRequest(request).orElse(null);
+        if (token == null) return null;
+        return extractClaim(token, claims -> claims.get(USER_ID_CLAIM_KEY, Long.class));
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);

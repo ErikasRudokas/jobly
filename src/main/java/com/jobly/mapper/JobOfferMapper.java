@@ -32,6 +32,19 @@ public class JobOfferMapper {
         return jobOffer;
     }
 
+    public static JobOfferWithSkillMatchListObject toJobOfferWithSkillMatchListObject(JobOfferEntity jobOfferEntity, Float skillMatch) {
+        var jobOfferListObject = new JobOfferWithSkillMatchListObject();
+        jobOfferListObject.setId(jobOfferEntity.getId());
+        jobOfferListObject.setTitle(jobOfferEntity.getTitle());
+        jobOfferListObject.setSalary(jobOfferEntity.getSalary().floatValue());
+        jobOfferListObject.setWorkType(jobOfferEntity.getWorkType());
+        jobOfferListObject.setLocation(jobOfferEntity.getLocation());
+        jobOfferListObject.setCategory(CategoryMapper.toJobOfferCategory(jobOfferEntity.getCategory()));
+        jobOfferListObject.setCompanyName(jobOfferEntity.getCompany());
+        jobOfferListObject.setUserSkillsMatch(skillMatch);
+        return jobOfferListObject;
+    }
+
     public static JobOfferListObject toJobOfferListObject(JobOfferEntity jobOfferEntity) {
         var jobOfferListObject = new JobOfferListObject();
         jobOfferListObject.setId(jobOfferEntity.getId());
