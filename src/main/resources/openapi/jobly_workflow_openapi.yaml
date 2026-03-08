@@ -424,6 +424,24 @@ paths:
       summary: Get all job offers
       tags:
         - Job Offers
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: The search term for job titles
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+          description: The number of items to skip before starting to collect the result set
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+          description: The numbers of items to return
       operationId: getAllJobOffers
       responses:
         '200':

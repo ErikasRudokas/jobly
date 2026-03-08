@@ -1,6 +1,7 @@
 package com.jobly.service;
 
 import com.jobly.dao.*;
+import com.jobly.dto.PaginationAndFilterWrapper;
 import com.jobly.exception.general.BadRequestException;
 import com.jobly.exception.general.ForbiddenException;
 import com.jobly.gen.model.*;
@@ -34,20 +35,26 @@ public class JobOfferService {
     private final UserProfileService userProfileService;
     private final UserSkillDao userSkillDao;
 
-    public GetAllJobOffersResponse findAll(Long userId) {
+    public GetAllJobOffersResponse findAll(Long userId, PaginationAndFilterWrapper paginationAndFilterWrapper) {
         List<UserSkillEntity> userSkills = userId != null ? userSkillDao.findAllByUserId(userId) : List.of();
 
-        var jobOffers = jobOfferDao.findAll().stream()
+        List<JobOfferEntity> filteredJobOffers = jobOfferDao.findAllWithPaginationAndFilter(paginationAndFilterWrapper);
+        Integer totalJobOfferCount = jobOfferDao.countAllWithFilter(paginationAndFilterWrapper.getSearch());
+
+        var jobOffers = getProcessedJobOffers(filteredJobOffers, userSkills);
+        return new GetAllJobOffersResponse()
+                .jobOffers(jobOffers)
+                .total(totalJobOfferCount);
+    }
+
+    private List<JobOfferWithSkillMatchListObject> getProcessedJobOffers(List<JobOfferEntity> filteredJobOffers, List<UserSkillEntity> userSkills) {
+        return filteredJobOffers.stream()
                 .map(jobOffer -> {
                     List<JobSkillEntity> jobSkills = jobSkillDao.findAllByJobOfferId(jobOffer.getId());
                     Float userSkillMatch = SkillSimilarityUtils.computeSkillMatch(jobSkills, userSkills);
                     return JobOfferMapper.toJobOfferWithSkillMatchListObject(jobOffer, userSkillMatch);
                 })
                 .toList();
-
-        return new GetAllJobOffersResponse()
-                .jobOffers(jobOffers)
-                .total(jobOffers.size());
     }
 
     public JobOfferDetailsResponse findById(Long id) {

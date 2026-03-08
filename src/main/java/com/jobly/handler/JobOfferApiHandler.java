@@ -2,6 +2,7 @@ package com.jobly.handler;
 
 import com.jobly.gen.api.JobOffersApiDelegate;
 import com.jobly.gen.model.*;
+import com.jobly.mapper.CommonMapper;
 import com.jobly.security.service.JwtService;
 import com.jobly.service.JobOfferService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,10 +23,11 @@ public class JobOfferApiHandler implements JobOffersApiDelegate {
     private final JwtService jwtService;
 
     @Override
-    public ResponseEntity<GetAllJobOffersResponse> getAllJobOffers() {
+    public ResponseEntity<GetAllJobOffersResponse> getAllJobOffers(String search, Integer offset, Integer limit){
         var userId = jwtService.extractUserIdOrNull(httpServletRequest);
         log.info("Getting all the job offers");
-        return ResponseEntity.ok(jobOfferService.findAll(userId));
+        var paginationAndFilterWrapper = CommonMapper.toPaginationAndFilterWrapper(search, offset, limit);
+        return ResponseEntity.ok(jobOfferService.findAll(userId, paginationAndFilterWrapper));
     }
 
     @Override
