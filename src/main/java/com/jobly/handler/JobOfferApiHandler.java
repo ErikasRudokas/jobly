@@ -23,8 +23,9 @@ public class JobOfferApiHandler implements JobOffersApiDelegate {
 
     @Override
     public ResponseEntity<GetAllJobOffersResponse> getAllJobOffers() {
+        var userId = jwtService.extractUserIdOrNull(httpServletRequest);
         log.info("Getting all the job offers");
-        return ResponseEntity.ok(jobOfferService.findAll());
+        return ResponseEntity.ok(jobOfferService.findAll(userId));
     }
 
     @Override
@@ -45,6 +46,13 @@ public class JobOfferApiHandler implements JobOffersApiDelegate {
         var userId = jwtService.extractUserId(httpServletRequest);
         log.info("Getting owned job offer details with id {}", id);
         return ResponseEntity.ok(jobOfferService.findOwnedJobOfferDetails(id, userId));
+    }
+
+    @Override
+    public ResponseEntity<JobOfferApplicationsResponse> getOwnedJobOfferApplications(Long id) {
+        var userId = jwtService.extractUserId(httpServletRequest);
+        log.info("Getting owned job offer applications with id {}", id);
+        return ResponseEntity.ok(jobOfferService.findOwnedJobOfferApplications(id, userId));
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.jobly.mapper.ApplicationMapper;
 import com.jobly.mapper.JobOfferMapper;
 import com.jobly.mapper.JobSkillMapper;
 import com.jobly.model.*;
+import com.jobly.util.SkillSimilarityUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,10 +32,17 @@ public class JobOfferService {
     private final SkillDao skillDao;
     private final CvDao cvDao;
     private final UserProfileService userProfileService;
+    private final UserSkillDao userSkillDao;
 
-    public GetAllJobOffersResponse findAll() {
+    public GetAllJobOffersResponse findAll(Long userId) {
+        List<UserSkillEntity> userSkills = userId != null ? userSkillDao.findAllByUserId(userId) : List.of();
+
         var jobOffers = jobOfferDao.findAll().stream()
-                .map(JobOfferMapper::toJobOfferListObject)
+                .map(jobOffer -> {
+                    List<JobSkillEntity> jobSkills = jobSkillDao.findAllByJobOfferId(jobOffer.getId());
+                    Float userSkillMatch = SkillSimilarityUtils.computeSkillMatch(jobSkills, userSkills);
+                    return JobOfferMapper.toJobOfferWithSkillMatchListObject(jobOffer, userSkillMatch);
+                })
                 .toList();
 
         return new GetAllJobOffersResponse()
@@ -60,24 +68,45 @@ public class JobOfferService {
     }
 
     @PreAuthorize("hasRole('EMPLOYER')")
-    public JobOfferWithApplicationsResponse findOwnedJobOfferDetails(Long id, Long userId) {
-        var jobOffer = jobOfferDao.findById(id);
+    public JobOfferWithApplicationsResponse findOwnedJobOfferDetails(Long jobOfferId, Long userId) {
+        var jobOffer = jobOfferDao.findById(jobOfferId);
         if (!jobOffer.getCreator().getId().equals(userId)) {
             throw new ForbiddenException("User is not the owner of the job offer");
         }
-        var applications = applicationDao.findAllPendingByJobOfferId(id);
-        var jobSkills = jobSkillDao.findAllByJobOfferId(id);
+        Integer pendingApplications = applicationDao.getCountOfAllPendingByJobOfferId(jobOfferId);
+        Integer totalApplications = applicationDao.getCountOfAllApplicationsByJobOfferId(jobOfferId);
+        var jobSkills = jobSkillDao.findAllByJobOfferId(jobOfferId);
         var response = new JobOfferWithApplicationsResponse();
         response.setJobOffer(JobOfferMapper.toJobOffer(jobOffer, jobSkills));
-        response.setApplications(getApplicationsOfJobOffer(applications));
+        response.setTotalApplications(totalApplications);
+        response.setUnprocessedApplications(pendingApplications);
         return response;
     }
 
-    private List<Application> getApplicationsOfJobOffer(List<ApplicationEntity> applications) {
+    @PreAuthorize("hasRole('EMPLOYER')")
+    public JobOfferApplicationsResponse findOwnedJobOfferApplications(Long jobOfferId, Long userId) {
+        var jobOffer = jobOfferDao.findById(jobOfferId);
+        if (!jobOffer.getCreator().getId().equals(userId)) {
+            throw new ForbiddenException("User is not the owner of the job offer");
+        }
+        Integer totalApplications = applicationDao.getCountOfAllApplicationsByJobOfferId(jobOfferId);
+        var applications = applicationDao.findAllApplicationsByJobOffer(jobOfferId);
+        var jobSkills = jobSkillDao.findAllByJobOfferId(jobOfferId);
+
+        var response = new JobOfferApplicationsResponse();
+        response.setApplications(getApplicationsOfJobOffer(applications, jobSkills));
+        response.setTotalApplications(totalApplications);
+        return response;
+    }
+
+    private List<ApplicationWithSkillMatch> getApplicationsOfJobOffer(List<ApplicationEntity> applications, List<JobSkillEntity> jobSkills) {
         return applications.stream()
                 .map(application -> {
-                    UserCvEntity mostRecentCv = cvDao.findMostRecentCv(application.getApplicant().getId());
-                    return ApplicationMapper.toApplication(application, getCvId(mostRecentCv));
+                    Long applicantId = application.getApplicant().getId();
+                    UserCvEntity mostRecentCv = cvDao.findMostRecentCv(applicantId);
+                    List<UserSkillEntity> userSkills = userSkillDao.findAllByUserId(applicantId);
+                    Float userSkillMatch = SkillSimilarityUtils.computeSkillMatch(jobSkills, userSkills);
+                    return ApplicationMapper.toApplicationWithSkillMatch(application, getCvId(mostRecentCv), userSkillMatch);
                 })
                 .toList();
     }

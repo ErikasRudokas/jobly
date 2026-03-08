@@ -589,6 +589,38 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /job-offers/mine/{id}/applications:
+    get:
+      summary: Get applications of a job offer owned by the authenticated user
+      tags:
+        - Job Offers
+      operationId: getOwnedJobOfferApplications
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The ID of the job offer and its applications to retrieve
+      responses:
+        '200':
+          description: Applications of a job offer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobOfferApplicationsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /job-offers/create:
     post:
       summary: Create a new job offer
@@ -1174,7 +1206,7 @@ components:
         jobOffers:
           type: array
           items:
-            $ref: '#/components/schemas/JobOfferListObject'
+            $ref: '#/components/schemas/JobOfferWithSkillMatchListObject'
 
     GetMineJobOffersResponse:
       type: object
@@ -1212,6 +1244,37 @@ components:
           maxLength: 100
         category:
           $ref: '#/components/schemas/JobOfferCategory'
+
+    JobOfferWithSkillMatchListObject:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        title:
+          type: string
+          example: Senior Java Developer
+          maxLength: 32
+        companyName:
+          type: string
+          example: Tech Solutions Inc.
+          maxLength: 60
+        salary:
+          type: number
+          format: float
+          example: 85000.00
+        workType:
+          $ref: '#/components/schemas/WorkType'
+        location:
+          type: string
+          example: New York, NY
+          maxLength: 100
+        category:
+          $ref: '#/components/schemas/JobOfferCategory'
+        userSkillsMatch:
+          type: number
+          format: float
+          description: This field represents how well an authenticated user's skills match the required skills for the job offer
+          example: 0.75
 
     JobOffer:
       type: object
@@ -1315,6 +1378,17 @@ components:
         cvId:
           $ref: '#/components/schemas/SystemGeneratedId'
 
+    ApplicationWithSkillMatch:
+      allOf:
+        - $ref: '#/components/schemas/Application'
+        - type: object
+          properties:
+            userSkillsMatch:
+              type: number
+              format: float
+              description: This field represents how well an applicants skills match the required skills for the job offer
+              example: 0.75
+
     ApplicationStatus:
       type: string
       enum: [ PENDING, ACCEPTED, REJECTED, WITHDRAWN ]
@@ -1341,10 +1415,23 @@ components:
       properties:
         jobOffer:
           $ref: '#/components/schemas/JobOffer'
-        applications:
-          type: array
-          items:
-            $ref: '#/components/schemas/Application'
+        totalApplications:
+          type: integer
+          example: 3
+        unprocessedApplications:
+          type: integer
+          example: 2
+
+    JobOfferApplicationsResponse:
+        type: object
+        properties:
+            totalApplications:
+              type: integer
+              example: 3
+            applications:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApplicationWithSkillMatch'
 
     JobOfferDetailsResponse:
       type: object

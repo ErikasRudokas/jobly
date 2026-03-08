@@ -3,7 +3,6 @@ package com.jobly.mapper;
 import com.jobly.gen.model.*;
 import com.jobly.model.ApplicationEntity;
 import com.jobly.model.JobOfferEntity;
-import com.jobly.model.UserCvEntity;
 import com.jobly.model.UserEntity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -28,6 +27,19 @@ public class ApplicationMapper {
         application.setCvId(cvId);
         application.setApplicationStatus(applicationEntity.getStatus());
         application.setApplicant(UserMapper.toApplicant(applicationEntity.getApplicant()));
+        return application;
+    }
+
+    public static ApplicationWithSkillMatch toApplicationWithSkillMatch(ApplicationEntity applicationEntity, Long cvId, Float skillMatch) {
+        var application = new ApplicationWithSkillMatch();
+        application.setId(applicationEntity.getId());
+        application.setComment(applicationEntity.getComment());
+        application.setCreatedAt(applicationEntity.getCreatedAt());
+        application.setUpdatedAt(applicationEntity.getUpdatedAt());
+        application.setCvId(cvId);
+        application.setApplicationStatus(applicationEntity.getStatus());
+        application.setApplicant(UserMapper.toApplicant(applicationEntity.getApplicant()));
+        application.setUserSkillsMatch(skillMatch);
         return application;
     }
 
