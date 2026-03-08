@@ -39,9 +39,9 @@ public class JobOfferDao {
         Integer offset = paginationAndFilterWrapper.getOffset();
         Integer limit = paginationAndFilterWrapper.getLimit();
 
-        int defaultOffset = (offset != null && offset >= 0) ? offset : 0;
-        int defaultLimit = (limit != null && limit > 0) ? limit : 10;
-        String defaultSearch = (search != null) ? search : "";
+        int defaultOffset = offset != null ? offset : 0;
+        int defaultLimit = limit != null ? limit : 10;
+        String defaultSearch = search != null ? search : "";
 
         return jobOfferRepository.findAllWithFilter(defaultSearch, defaultLimit, defaultOffset);
     }

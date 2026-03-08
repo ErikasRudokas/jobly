@@ -2,6 +2,7 @@ package com.jobly.service;
 
 import com.jobly.dao.ApplicationDao;
 import com.jobly.dao.CvDao;
+import com.jobly.dto.MyApplicationFilterWrapper;
 import com.jobly.exception.general.BadRequestException;
 import com.jobly.exception.general.ForbiddenException;
 import com.jobly.gen.model.*;
@@ -20,18 +21,20 @@ import java.util.Optional;
 public class ApplicationService {
 
     private final ApplicationDao applicationDao;
-    private final UserService userService;
     private final CvDao cvDao;
 
     @PreAuthorize("hasRole('USER')")
-    public GetMyApplicationsResponse getMyApplications(Long userId) {
-        var applications = applicationDao.findAllByUserId(userId).stream()
+    public GetMyApplicationsResponse getMyApplications(Long userId, MyApplicationFilterWrapper filterWrapper) {
+        var filteredApplications = applicationDao.findAllByUserId(userId, filterWrapper);
+        Integer totalApplications = applicationDao.countAllByUserId(userId, filterWrapper);
+
+        var applications = filteredApplications.stream()
                 .map(ApplicationMapper::toApplicationListObject)
                 .toList();
 
         return new GetMyApplicationsResponse()
                 .applications(applications)
-                .total(applications.size());
+                .total(totalApplications);
     }
 
     @PreAuthorize("hasRole('USER')")

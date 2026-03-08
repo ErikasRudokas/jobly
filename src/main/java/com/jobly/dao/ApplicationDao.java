@@ -1,5 +1,6 @@
 package com.jobly.dao;
 
+import com.jobly.dto.MyApplicationFilterWrapper;
 import com.jobly.exception.general.NotFoundException;
 import com.jobly.gen.model.ApplicationStatus;
 import com.jobly.model.ApplicationEntity;
@@ -22,8 +23,16 @@ public class ApplicationDao {
         return applicationRepository.save(application);
     }
 
-    public Collection<ApplicationEntity> findAllByUserId(Long userId) {
-        return applicationRepository.findAllByApplicantId(userId);
+    public Collection<ApplicationEntity> findAllByUserId(Long userId, MyApplicationFilterWrapper filterWrapper) {
+        ApplicationStatus status = filterWrapper.getStatus();
+        Integer offset = filterWrapper.getOffset();
+        Integer limit = filterWrapper.getLimit();
+
+        int defaultOffset = offset != null ? offset : 0;
+        int defaultLimit = limit != null ? limit : 10;
+        List<ApplicationStatus> statuses = status != null ? List.of(status) : List.of(ApplicationStatus.values());
+        List<String> statusStrings = formatApplicationStatuses(statuses);
+        return applicationRepository.findAllByUserIdAndFilter(userId, statusStrings, defaultLimit, defaultOffset);
     }
 
     public ApplicationEntity findApplicationOfUser(Long userId, Long applicationId) {
@@ -55,5 +64,18 @@ public class ApplicationDao {
 
     public List<ApplicationEntity> findAllApplicationsByJobOffer(Long jobOfferId) {
         return applicationRepository.findAllByJobOfferId(jobOfferId);
+    }
+
+    public Integer countAllByUserId(Long userId, MyApplicationFilterWrapper filterWrapper) {
+        ApplicationStatus status = filterWrapper.getStatus();
+        List<ApplicationStatus> statuses = status != null ? List.of(status) : List.of(ApplicationStatus.values());
+        List<String> formattedStatuses = formatApplicationStatuses(statuses);
+        return applicationRepository.countAllByUserIdAndFilter(userId, formattedStatuses);
+    }
+
+    private static List<String> formatApplicationStatuses(List<ApplicationStatus> statuses) {
+        return statuses.stream()
+                .map(ApplicationStatus::getValue)
+                .toList();
     }
 }

@@ -719,6 +719,23 @@ paths:
       operationId: getMyApplications
       security:
         - bearerAuth: [ ]
+      parameters:
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/ApplicationStatus'
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+          description: The number of items to skip before starting to collect the result set
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+          description: The numbers of items to return
       responses:
         '200':
           description: A list of applications submitted by the user
