@@ -1,6 +1,6 @@
 package com.jobly.mapper;
 
-import com.jobly.dto.MyApplicationFilterWrapper;
+import com.jobly.dto.ApplicationFilterWrapper;
 import com.jobly.dto.PaginationAndFilterWrapper;
 import com.jobly.gen.model.ApplicationStatus;
 import lombok.AccessLevel;
@@ -17,8 +17,8 @@ public class CommonMapper {
                 .build();
     }
 
-    public static MyApplicationFilterWrapper toMyApplicationFilterWrapper(ApplicationStatus status, Integer offset, Integer limit) {
-        return MyApplicationFilterWrapper.builder()
+    public static ApplicationFilterWrapper toApplicationFilterWrapper(ApplicationStatus status, Integer offset, Integer limit) {
+        return ApplicationFilterWrapper.builder()
                 .status(status)
                 .offset(offset)
                 .limit(limit)

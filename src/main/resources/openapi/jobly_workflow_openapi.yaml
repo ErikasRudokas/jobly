@@ -561,6 +561,24 @@ paths:
       operationId: getOwnedJobOffers
       security:
         - bearerAuth: [ ]
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: The search term for job titles
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+          description: The number of items to skip before starting to collect the result set
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+          description: The numbers of items to return
       responses:
         '200':
           description: A list of job offers owned by the user
@@ -623,6 +641,22 @@ paths:
             type: integer
             format: int64
           description: The ID of the job offer and its applications to retrieve
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/ApplicationStatus'
+        - name: offset
+          in: query
+          schema:
+           type: integer
+           format: int32
+          description: The number of items to skip before starting to collect the result set
+        - name: limit
+          in: query
+          schema:
+           type: integer
+           format: int32
+          description: The numbers of items to return
       responses:
         '200':
           description: Applications of a job offer
@@ -1730,6 +1764,12 @@ components:
         canApply:
           type: boolean
           example: true
+        reason:
+          $ref: '#/components/schemas/ApplicationRestrictionReason'
+
+    ApplicationRestrictionReason:
+      type: string
+      enum: [ ALREADY_APPLIED, SKILL_OR_CV_MISSING, SKILLS_NOT_VERIFIED, OTHER]
 
     SkillType:
       type: string

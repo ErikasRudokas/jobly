@@ -30,4 +30,21 @@ public interface JobOfferRepository extends JpaRepository<JobOfferEntity, Long> 
             """,
             nativeQuery = true)
     Integer countAllWithFilter(String search);
+
+    @Query(value = """
+            SELECT *
+            FROM JOB_OFFERS
+            WHERE CREATOR_ID = :userId AND LOWER(TITLE) LIKE LOWER(CONCAT('%', :search, '%'))
+            LIMIT :limit OFFSET :offset
+            """,
+            nativeQuery = true)
+    List<JobOfferEntity> findAllByUserIdWithFilter(Long userId, String search, int limit, int offset);
+
+    @Query(value = """
+            SELECT COUNT(*)
+            FROM JOB_OFFERS
+            WHERE CREATOR_ID = :userId AND LOWER(TITLE) LIKE LOWER(CONCAT('%', :search, '%'))
+            """,
+            nativeQuery = true)
+    Integer countAllByUserIdWithFilter(Long userId, String search);
 }

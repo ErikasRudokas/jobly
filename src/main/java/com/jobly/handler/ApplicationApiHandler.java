@@ -39,7 +39,7 @@ public class ApplicationApiHandler implements ApplicationsApiDelegate {
     public ResponseEntity<GetMyApplicationsResponse> getMyApplications(ApplicationStatus status, Integer offset, Integer limit) {
         var userId = jwtService.extractUserId(httpServletRequest);
         log.info("Getting all of applications for user with id: {}", userId);
-        var filterWrapper = CommonMapper.toMyApplicationFilterWrapper(status, offset, limit);
+        var filterWrapper = CommonMapper.toApplicationFilterWrapper(status, offset, limit);
         return ResponseEntity.ok(applicationService.getMyApplications(userId, filterWrapper));
     }
 

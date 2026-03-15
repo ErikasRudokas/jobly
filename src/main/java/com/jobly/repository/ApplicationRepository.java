@@ -16,11 +16,11 @@ public interface ApplicationRepository extends JpaRepository<ApplicationEntity, 
 
     Integer countAllByJobOfferIdAndStatus(Long jobOfferId, ApplicationStatus status);
 
-    Integer countAllByJobOfferId(Long jobOfferId);
+    Integer countAllByJobOfferIdAndStatusIn(Long jobOfferId, List<ApplicationStatus> statuses);
 
     boolean existsByApplicantIdAndJobOfferIdAndStatusIn(Long userId, Long jobOfferId, List<ApplicationStatus> statuses);
 
-    List<ApplicationEntity> findAllByJobOfferId(Long jobOfferId);
+    List<ApplicationEntity> findAllByJobOfferIdAndStatusIn(Long jobOfferId, List<ApplicationStatus> statuses);
 
     @Query(value = """
         SELECT *
@@ -41,4 +41,24 @@ public interface ApplicationRepository extends JpaRepository<ApplicationEntity, 
         """,
     nativeQuery = true)
     Integer countAllByUserIdAndFilter(Long userId, List<String> statuses);
+
+    @Query(value = """
+        SELECT *
+        FROM APPLICATIONS
+        WHERE JOB_OFFER_ID = :jobOfferId
+        AND STATUS IN (:statuses)
+        ORDER BY CREATED_AT DESC
+        LIMIT :limit OFFSET :offset
+        """,
+    nativeQuery = true)
+    List<ApplicationEntity> findAllByJobOfferIdAndFilter(Long jobOfferId, List<String> statuses, Integer limit, Integer offset);
+
+    @Query(value = """
+        SELECT COUNT(*)
+        FROM APPLICATIONS
+        WHERE JOB_OFFER_ID = :jobOfferId
+        AND STATUS IN (:statuses)
+        """,
+        nativeQuery = true)
+    Integer countAllByJobOfferIdAndFilter(Long jobOfferId, List<String> statuses);
 }

@@ -26,10 +26,6 @@ public class JobOfferDao {
         return jobOfferRepository.save(jobOfferEntity);
     }
 
-    public List<JobOfferEntity> findByUserId(Long userId) {
-        return jobOfferRepository.findAllByCreatorId(userId);
-    }
-
     public void delete(JobOfferEntity jobOffer) {
         jobOfferRepository.delete(jobOffer);
     }
@@ -49,5 +45,22 @@ public class JobOfferDao {
     public Integer countAllWithFilter(String search) {
         String defaultSearch = (search != null) ? search : "";
         return jobOfferRepository.countAllWithFilter(defaultSearch);
+    }
+
+    public List<JobOfferEntity> findByUserIdWithFilter(Long userId, PaginationAndFilterWrapper paginationAndFilterWrapper) {
+        String search = paginationAndFilterWrapper.getSearch();
+        Integer offset = paginationAndFilterWrapper.getOffset();
+        Integer limit = paginationAndFilterWrapper.getLimit();
+
+        int defaultOffset = offset != null ? offset : 0;
+        int defaultLimit = limit != null ? limit : 10;
+        String defaultSearch = search != null ? search : "";
+
+        return jobOfferRepository.findAllByUserIdWithFilter(userId, defaultSearch, defaultLimit, defaultOffset);
+    }
+
+    public Integer countByUserIdWithFilter(Long userId, String search) {
+        String defaultSearch = search != null ? search : "";
+        return jobOfferRepository.countAllByUserIdWithFilter(userId, defaultSearch);
     }
 }

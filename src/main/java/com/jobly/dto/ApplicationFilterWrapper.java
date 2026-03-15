@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MyApplicationFilterWrapper {
+public class ApplicationFilterWrapper {
 
     private ApplicationStatus status;
 
