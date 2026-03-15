@@ -1,7 +1,10 @@
 package com.jobly.handler;
 
+import com.jobly.dto.ApplicationFilterWrapper;
+import com.jobly.dto.PaginationAndFilterWrapper;
 import com.jobly.gen.api.JobOffersApiDelegate;
 import com.jobly.gen.model.*;
+import com.jobly.mapper.CommonMapper;
 import com.jobly.security.service.JwtService;
 import com.jobly.service.JobOfferService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,10 +25,11 @@ public class JobOfferApiHandler implements JobOffersApiDelegate {
     private final JwtService jwtService;
 
     @Override
-    public ResponseEntity<GetAllJobOffersResponse> getAllJobOffers() {
+    public ResponseEntity<GetAllJobOffersResponse> getAllJobOffers(String search, Integer offset, Integer limit){
         var userId = jwtService.extractUserIdOrNull(httpServletRequest);
         log.info("Getting all the job offers");
-        return ResponseEntity.ok(jobOfferService.findAll(userId));
+        var paginationAndFilterWrapper = CommonMapper.toPaginationAndFilterWrapper(search, offset, limit);
+        return ResponseEntity.ok(jobOfferService.findAll(userId, paginationAndFilterWrapper));
     }
 
     @Override
@@ -35,10 +39,11 @@ public class JobOfferApiHandler implements JobOffersApiDelegate {
     }
 
     @Override
-    public ResponseEntity<GetMineJobOffersResponse> getOwnedJobOffers() {
+    public ResponseEntity<GetMineJobOffersResponse> getOwnedJobOffers(String search, Integer offset, Integer limit) {
         var userId = jwtService.extractUserId(httpServletRequest);
         log.info("Getting owned job offers for user with id {}", userId);
-        return ResponseEntity.ok(jobOfferService.findJobOffersByUserId(userId));
+        PaginationAndFilterWrapper paginationAndFilterWrapper = CommonMapper.toPaginationAndFilterWrapper(search, offset, limit);
+        return ResponseEntity.ok(jobOfferService.findJobOffersByUserId(userId, paginationAndFilterWrapper));
     }
 
     @Override
@@ -49,10 +54,11 @@ public class JobOfferApiHandler implements JobOffersApiDelegate {
     }
 
     @Override
-    public ResponseEntity<JobOfferApplicationsResponse> getOwnedJobOfferApplications(Long id) {
+    public ResponseEntity<JobOfferApplicationsResponse> getOwnedJobOfferApplications(Long id, ApplicationStatus status, Integer offset, Integer limit) {
         var userId = jwtService.extractUserId(httpServletRequest);
         log.info("Getting owned job offer applications with id {}", id);
-        return ResponseEntity.ok(jobOfferService.findOwnedJobOfferApplications(id, userId));
+        ApplicationFilterWrapper applicationFilterWrapper = CommonMapper.toApplicationFilterWrapper(status, offset, limit);
+        return ResponseEntity.ok(jobOfferService.findOwnedJobOfferApplications(id, userId, applicationFilterWrapper));
     }
 
     @Override

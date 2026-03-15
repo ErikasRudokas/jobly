@@ -1,6 +1,8 @@
 package com.jobly.service;
 
 import com.jobly.dao.*;
+import com.jobly.dto.ApplicationFilterWrapper;
+import com.jobly.dto.PaginationAndFilterWrapper;
 import com.jobly.exception.general.BadRequestException;
 import com.jobly.exception.general.ForbiddenException;
 import com.jobly.gen.model.*;
@@ -34,20 +36,26 @@ public class JobOfferService {
     private final UserProfileService userProfileService;
     private final UserSkillDao userSkillDao;
 
-    public GetAllJobOffersResponse findAll(Long userId) {
+    public GetAllJobOffersResponse findAll(Long userId, PaginationAndFilterWrapper paginationAndFilterWrapper) {
         List<UserSkillEntity> userSkills = userId != null ? userSkillDao.findAllByUserId(userId) : List.of();
 
-        var jobOffers = jobOfferDao.findAll().stream()
+        List<JobOfferEntity> filteredJobOffers = jobOfferDao.findAllWithPaginationAndFilter(paginationAndFilterWrapper);
+        Integer totalJobOfferCount = jobOfferDao.countAllWithFilter(paginationAndFilterWrapper.getSearch());
+
+        var jobOffers = getProcessedJobOffers(filteredJobOffers, userSkills);
+        return new GetAllJobOffersResponse()
+                .jobOffers(jobOffers)
+                .total(totalJobOfferCount);
+    }
+
+    private List<JobOfferWithSkillMatchListObject> getProcessedJobOffers(List<JobOfferEntity> filteredJobOffers, List<UserSkillEntity> userSkills) {
+        return filteredJobOffers.stream()
                 .map(jobOffer -> {
                     List<JobSkillEntity> jobSkills = jobSkillDao.findAllByJobOfferId(jobOffer.getId());
                     Float userSkillMatch = SkillSimilarityUtils.computeSkillMatch(jobSkills, userSkills);
                     return JobOfferMapper.toJobOfferWithSkillMatchListObject(jobOffer, userSkillMatch);
                 })
                 .toList();
-
-        return new GetAllJobOffersResponse()
-                .jobOffers(jobOffers)
-                .total(jobOffers.size());
     }
 
     public JobOfferDetailsResponse findById(Long id) {
@@ -57,14 +65,17 @@ public class JobOfferService {
     }
 
     @PreAuthorize("hasRole('EMPLOYER')")
-    public GetMineJobOffersResponse findJobOffersByUserId(Long userId) {
-        var jobOffers = jobOfferDao.findByUserId(userId).stream()
+    public GetMineJobOffersResponse findJobOffersByUserId(Long userId, PaginationAndFilterWrapper paginationAndFilterWrapper) {
+        List<JobOfferEntity> filteredJobOffers = jobOfferDao.findByUserIdWithFilter(userId, paginationAndFilterWrapper);
+        Integer totalJobOfferCount = jobOfferDao.countByUserIdWithFilter(userId, paginationAndFilterWrapper.getSearch());
+
+        var jobOffers = filteredJobOffers.stream()
                 .map(JobOfferMapper::toJobOfferListObject)
                 .toList();
 
         return new GetMineJobOffersResponse()
                 .jobOffers(jobOffers)
-                .total(jobOffers.size());
+                .total(totalJobOfferCount);
     }
 
     @PreAuthorize("hasRole('EMPLOYER')")
@@ -74,7 +85,7 @@ public class JobOfferService {
             throw new ForbiddenException("User is not the owner of the job offer");
         }
         Integer pendingApplications = applicationDao.getCountOfAllPendingByJobOfferId(jobOfferId);
-        Integer totalApplications = applicationDao.getCountOfAllApplicationsByJobOfferId(jobOfferId);
+        Integer totalApplications = applicationDao.getCountOfAllRelevantApplicationsByJobOfferId(jobOfferId);
         var jobSkills = jobSkillDao.findAllByJobOfferId(jobOfferId);
         var response = new JobOfferWithApplicationsResponse();
         response.setJobOffer(JobOfferMapper.toJobOffer(jobOffer, jobSkills));
@@ -84,13 +95,13 @@ public class JobOfferService {
     }
 
     @PreAuthorize("hasRole('EMPLOYER')")
-    public JobOfferApplicationsResponse findOwnedJobOfferApplications(Long jobOfferId, Long userId) {
+    public JobOfferApplicationsResponse findOwnedJobOfferApplications(Long jobOfferId, Long userId, ApplicationFilterWrapper filterWrapper) {
         var jobOffer = jobOfferDao.findById(jobOfferId);
         if (!jobOffer.getCreator().getId().equals(userId)) {
             throw new ForbiddenException("User is not the owner of the job offer");
         }
-        Integer totalApplications = applicationDao.getCountOfAllApplicationsByJobOfferId(jobOfferId);
-        var applications = applicationDao.findAllApplicationsByJobOffer(jobOfferId);
+        Integer totalApplications = applicationDao.countAllByJobOfferId(jobOfferId, filterWrapper);
+        var applications = applicationDao.findAllByJobOfferId(jobOfferId, filterWrapper);
         var jobSkills = jobSkillDao.findAllByJobOfferId(jobOfferId);
 
         var response = new JobOfferApplicationsResponse();
@@ -258,7 +269,15 @@ public class JobOfferService {
 
     @PreAuthorize("hasRole('USER')")
     public CanApplyResponse canApplyToJobOffer(Long jobOfferId, Long userId) {
-        var canApply = !applicationDao.isUserAlreadyAppliedToJobOffer(userId, jobOfferId);
-        return new CanApplyResponse().canApply(canApply);
+        if (applicationDao.isUserAlreadyAppliedToJobOffer(userId, jobOfferId)) {
+            return new CanApplyResponse().canApply(false).reason(ApplicationRestrictionReason.ALREADY_APPLIED);
+        }
+        if (!userProfileService.isUserProfileSetUp(userId) && !cvDao.existsByUserId(userId)) {
+            return new CanApplyResponse().canApply(false).reason(ApplicationRestrictionReason.SKILL_OR_CV_MISSING);
+        }
+        if (!userProfileService.isUserProfileReviewed(userId)) {
+            return new CanApplyResponse().canApply(false).reason(ApplicationRestrictionReason.SKILLS_NOT_VERIFIED);
+        }
+        return new CanApplyResponse().canApply(true);
     }
 }

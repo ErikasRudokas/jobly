@@ -2,6 +2,7 @@ package com.jobly.handler;
 
 import com.jobly.gen.api.ApplicationsApiDelegate;
 import com.jobly.gen.model.*;
+import com.jobly.mapper.CommonMapper;
 import com.jobly.security.service.JwtService;
 import com.jobly.service.ApplicationService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,10 +36,11 @@ public class ApplicationApiHandler implements ApplicationsApiDelegate {
     }
 
     @Override
-    public ResponseEntity<GetMyApplicationsResponse> getMyApplications() {
+    public ResponseEntity<GetMyApplicationsResponse> getMyApplications(ApplicationStatus status, Integer offset, Integer limit) {
         var userId = jwtService.extractUserId(httpServletRequest);
         log.info("Getting all of applications for user with id: {}", userId);
-        return ResponseEntity.ok(applicationService.getMyApplications(userId));
+        var filterWrapper = CommonMapper.toApplicationFilterWrapper(status, offset, limit);
+        return ResponseEntity.ok(applicationService.getMyApplications(userId, filterWrapper));
     }
 
     @Override
