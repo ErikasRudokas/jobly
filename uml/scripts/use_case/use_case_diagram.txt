@@ -1,0 +1,112 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorsStyle awesome
+skinparam defaultFontSize 18
+skinparam padding 0
+skinparam nodesep 10
+skinparam ranksep 50
+
+actor "Neprisijungęs naudotojas" as Guest
+actor "Prisijungęs naudotojas" as AuthUser
+actor "Visi naudotojai" as AllUsers
+actor "Naudotojas" as JobSeeker
+actor "Naudotojas, dirbantis su įgūdžiais" as SkillSeeker
+actor "Darbdavys" as Employer
+actor "Administratorius" as Admin
+actor "Gyvenimo aprašymo apdorojimo sistema" as CvService
+
+AuthUser <|-- SkillSeeker
+SkillSeeker <|-- JobSeeker
+SkillSeeker <|-- Employer
+AuthUser <|-- Admin
+AllUsers <|-- Guest
+AllUsers <|-- AuthUser
+
+rectangle "Jobly sistema" {
+
+  package "Autentifikacijos posistemė" {
+    usecase "Registruotis" as UC_Register
+    usecase "Prisijungti" as UC_Login
+    usecase "Atsijungti" as UC_Logout
+  }
+
+  package "Naudotojo profilio posistemė" {
+    usecase "Valdyti savo profilį" as UC_ManageProfile
+    usecase "Valdyti savo įgūdžius, patirtį ir išsilavinimą" as UC_ManageProfileDetails
+    usecase "Peržiūrėti naudotojo profilį, įgūdžius,\npatirtį ir išsilavinimą" as UC_ViewAnyProfile
+    usecase "Įkelti gyvenimo aprašymą" as UC_UploadCv
+    usecase "Atsisiųsti gyvenimo aprašymą" as UC_DownloadCv
+  }
+
+  package "Darbo pasiūlymų posistemė" {
+    usecase "Peržiūrėti darbo pasiūlymus" as UC_ViewJobOffers
+    usecase "Filtruoti darbo pasiūlymus" as UC_FilterJobOffers
+    usecase "Peržiūrėti darbo pasiūlymo informaciją" as UC_ViewJobOfferDetails
+    usecase "Valdyti darbo pasiūlymą" as UC_ManageJobOffers
+    usecase "Peržiūrėti kandidatų paraiškas" as UC_ViewJobOfferApplications
+    usecase "Filtruoti kandidatų paraiškas" as UC_FilterJobOfferApplications
+    usecase "Valdyti kandidatų paraiškas" as UC_ManageJobOfferApplications
+  }
+
+  package "Kandidatavimo posistemė" {
+      usecase "Kandidatuoti į darbo pasiūlymą" as UC_Apply
+      usecase "Peržiūrėti savo paraiškas" as UC_ViewMyApplications
+      usecase "Filtruoti savo paraiškas" as UC_FilterMyApplications
+      usecase "Valdyti paraišką" as UC_ManageApplications
+  }
+
+  package "Įgūdžių posistemė" {
+    usecase "Ieškoti įgūdžių" as UC_SearchSkills
+  }
+
+  package "Naudotojų administravimo posistemė" {
+    usecase "Peržiūrėti naudotojų sąrašą" as UC_ViewUsers
+    usecase "Filtruoti naudotojus" as UC_FilterUsers
+    usecase "Peržiūrėti naudotojo būsenų istoriją" as UC_ViewUserStatusHistory
+    usecase "Valdyti naudotojo būseną" as UC_ManageUserStatus
+  }
+
+  package "Darbo kategorijų posistemė" {
+    usecase "Peržiūrėti kategorijas" as UC_ViewCategories
+    usecase "Valdyti kategoriją" as UC_ManageCategory
+  }
+}
+
+Guest --> UC_Register
+Guest --> UC_Login
+
+AuthUser --> UC_Logout
+AuthUser --> UC_ManageProfile
+
+AllUsers --> UC_ViewJobOffers
+AllUsers --> UC_ViewJobOfferDetails
+
+JobSeeker --> UC_ManageProfileDetails
+JobSeeker --> UC_UploadCv
+JobSeeker --> UC_Apply
+JobSeeker --> UC_ViewMyApplications
+
+Employer --> UC_ViewAnyProfile
+Employer --> UC_ManageJobOffers
+Employer --> UC_ViewJobOfferApplications
+
+SkillSeeker --> UC_SearchSkills
+SkillSeeker --> UC_DownloadCv
+
+Admin --> UC_ViewUsers
+Admin --> UC_ViewUserStatusHistory
+Admin --> UC_ViewCategories
+
+UC_UploadCv --> CvService : "Apdoroti CV"
+
+UC_FilterJobOffers .> UC_ViewJobOffers : <<extend>>
+UC_FilterJobOfferApplications .> UC_ViewJobOfferApplications : <<extend>>
+UC_FilterUsers .> UC_ViewUsers : <<extend>>
+UC_ManageUserStatus .> UC_ViewUserStatusHistory : <<extend>>
+UC_ManageCategory .> UC_ViewCategories : <<extend>>
+UC_ManageJobOfferApplications .left.> UC_ViewJobOfferApplications : <<extend>>
+UC_FilterMyApplications .> UC_ViewMyApplications : <<extend>>
+UC_ManageApplications .left.> UC_ViewMyApplications : <<extend>>
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorsStyle awesome
+skinparam defaultFontSize 18
+skinparam padding 0
+skinparam nodesep 10
+skinparam ranksep 50
+
+actor "Naudotojas" as JobSeeker
+
+rectangle "Jobly sistema" {
+  package "Kandidatavimo posistemė" {
+    usecase "Kandidatuoti į darbo pasiūlymą" as UC_Apply
+    usecase "Peržiūrėti savo paraiškas" as UC_ViewMyApplications
+    usecase "Filtruoti savo paraiškas" as UC_FilterMyApplications
+    usecase "Valdyti paraišką" as UC_ManageApplications
+  }
+}
+
+JobSeeker --> UC_Apply
+JobSeeker --> UC_ViewMyApplications
+
+UC_FilterMyApplications .left.> UC_ViewMyApplications : <<extend>>
+UC_ManageApplications .> UC_ViewMyApplications : <<extend>>
+
+@enduml

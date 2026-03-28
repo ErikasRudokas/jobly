@@ -1277,6 +1277,10 @@ components:
           type: string
           example: john.doe
           maxLength: 32
+        role:
+          type: string
+          enum: [USER, EMPLOYER]
+          example: USER
         email:
           type: string
           format: email

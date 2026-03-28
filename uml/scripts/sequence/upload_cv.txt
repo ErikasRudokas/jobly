@@ -1,0 +1,87 @@
+@startuml
+' CV ikelimo seka (visi sluoksniai)
+
+title CV ikelimo seka
+
+actor "Naudotojas" as User
+participant "UsersApiHandler" as Handler
+participant "CvService" as CvService
+participant "UserService" as UserService
+participant "UserDao" as UserDao
+participant "CvDao" as CvDao
+participant "UserCvRepository" as CvRepo
+participant "CvParserApiService" as CvParserSvc
+actor "CvParserApi (isorinis servisas)" as CvParserApi
+participant "CvParseHandler" as CvParseHandler
+participant "UserWorkExperienceDao" as WorkDao
+participant "UserEducationDao" as EduDao
+participant "UserSkillDao" as UserSkillDao
+participant "SkillDao" as SkillLookupDao
+
+User -> Handler: uploadUserCv(MultipartFile file)
+Handler -> CvService: uploadUserCv(Long userId, MultipartFile file)
+
+CvService -> CvService: Resource cvFile = file.getResource()
+CvService -> UserService: findById(Long userId)
+UserService -> UserDao: findById(Long userId)
+UserDao --> UserService: UserEntity
+UserService --> CvService: UserEntity
+
+CvService -> CvService: UserCvEntity userCvEntity = CvMapper.toUserCvEntity(Resource, UserEntity)
+CvService -> CvDao: findAllByUserId(Long userId)
+CvDao --> CvService: List<UserCvEntity>
+CvService -> CvService: setStatus(INACTIVE) kiekvienam esamam CV
+CvService -> CvDao: saveAll(List<UserCvEntity> existingCvs)
+
+CvService -> CvService: AbstractResource cvFileToParse = getCvFileToParse(Resource, UserCvEntity)
+CvService -> CvParserSvc: parseCv(AbstractResource cvFileToParse)
+CvParserSvc -> CvParserApi: parseCvPost(AbstractResource cvFileToParse).block()
+CvParserApi --> CvParserSvc: CvParseResponse
+CvParserSvc --> CvService: CvParseResponse
+note over CvParserApi
+  Isorinis CV paslaugu kvietimas.
+  Vidaus veiksmai nerodomi.
+end note
+
+CvService -> CvParseHandler: saveParsedCvData(UserCvEntity userCvEntity, CvParseResponse response)
+CvParseHandler -> CvDao: existsByUserId(Long userId)
+CvDao --> CvParseHandler: boolean
+
+alt CV jau yra duombazeje
+  CvParseHandler --> CvService: return
+else CV dar neissaugotas
+  CvParseHandler -> WorkDao: existsByUserId(Long userId)
+  WorkDao --> CvParseHandler: boolean
+  alt Darbo patirtis jau yra
+    CvParseHandler --> CvParseHandler: return
+  else Darbo patirtis issaugoma
+    CvParseHandler -> WorkDao: saveAll(List<UserWorkExperienceEntity> workExperienceEntities)
+  end
+
+  CvParseHandler -> EduDao: existsByUserId(Long userId)
+  EduDao --> CvParseHandler: boolean
+  alt Isilavinimas jau yra
+    CvParseHandler --> CvParseHandler: return
+  else Isilavinimas issaugomas
+    CvParseHandler -> EduDao: saveAll(List<UserEducationEntity> educationEntities)
+  end
+
+  CvParseHandler -> UserSkillDao: existsByUserId(Long userId)
+  UserSkillDao --> CvParseHandler: boolean
+  alt Irasuoti igudziai jau yra
+    CvParseHandler --> CvParseHandler: return
+  else Irasuojami igudziai
+    CvParseHandler -> SkillLookupDao: findAllSkillAliases()
+    SkillLookupDao --> CvParseHandler: Map<String, SkillAliasEntity>
+    CvParseHandler -> UserSkillDao: saveAll(List<UserSkillEntity> userSkillEntities)
+  end
+end
+
+CvService -> CvDao: save(UserCvEntity userCvEntity)
+CvDao --> CvService: UserCvEntity
+CvService -> CvService: CvUploadResponse = CvMapper.toCvUploadResponse(UserCvEntity)
+CvService --> Handler: CvUploadResponse
+Handler --> User: ResponseEntity<CvUploadResponse>
+
+@enduml
+

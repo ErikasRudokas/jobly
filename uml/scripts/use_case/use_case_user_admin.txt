@@ -1,0 +1,28 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorsStyle awesome
+skinparam defaultFontSize 18
+skinparam padding 0
+skinparam nodesep 10
+skinparam ranksep 50
+
+actor "Administratorius" as Admin
+
+rectangle "Jobly sistema" {
+  package "Naudotojų administravimo posistemė" {
+    usecase "Peržiūrėti naudotojų sąrašą" as UC_ViewUsers
+    usecase "Filtruoti naudotojus" as UC_FilterUsers
+    usecase "Peržiūrėti naudotojo būsenų istoriją" as UC_ViewUserStatusHistory
+    usecase "Valdyti naudotojo būseną" as UC_ManageUserStatus
+  }
+}
+
+Admin --> UC_ViewUsers
+Admin --> UC_ViewUserStatusHistory
+
+UC_FilterUsers .> UC_ViewUsers : <<extend>>
+UC_ManageUserStatus .> UC_ViewUserStatusHistory : <<extend>>
+
+@enduml
+

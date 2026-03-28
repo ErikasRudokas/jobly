@@ -18,7 +18,7 @@ public class UserMapper {
                 .lastName(registerRequest.getLastName())
                 .displayName(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
-                .role(Role.USER)
+                .role(Role.valueOf(registerRequest.getRole().getValue()))
                 .suspended(false)
                 .build();
     }
