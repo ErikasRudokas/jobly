@@ -58,6 +58,7 @@ class JobSkillRepositoryTests {
                 .email(email)
                 .passwordHash("hash")
                 .role(Role.EMPLOYER)
+                .suspended(false)
                 .build();
         entityManager.persist(user);
         return user;

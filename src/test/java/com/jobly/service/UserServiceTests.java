@@ -1,10 +1,17 @@
 package com.jobly.service;
 
+import com.jobly.dao.CvDao;
 import com.jobly.dao.UserDao;
+import com.jobly.enums.CvStatus;
 import com.jobly.enums.Role;
+import com.jobly.exception.specific.NotUniqueUsernameException;
+import com.jobly.gen.model.GetUserDetailsResponse;
+import com.jobly.gen.model.ModifyUserDetailsRequest;
 import com.jobly.gen.model.UserRegisterRequest;
 import com.jobly.gen.model.UserRegisterResponse;
+import com.jobly.model.UserCvEntity;
 import com.jobly.model.UserEntity;
+import com.jobly.util.TestEntityFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -16,8 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static com.jobly.util.TestEntityFactory.buildUser;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,6 +36,9 @@ class UserServiceTests {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private CvDao cvDao;
 
     @InjectMocks
     private UserService userService;
@@ -116,5 +125,39 @@ class UserServiceTests {
         when(userDao.findById(user.getId())).thenReturn(user);
 
         assertTrue(userService.isCurrentUserEmployer(user.getId()));
+    }
+
+    @Test
+    void updateUserDetails_updatesFieldsAndReturnsCvId() {
+        UserEntity user = buildUser(10L, "Sam", "Ray", "sam@jobly.test", "sam");
+        UserCvEntity cvEntity = TestEntityFactory.buildUserCv(99L, user, "sam-cv.pdf", new byte[]{1});
+        ModifyUserDetailsRequest request = new ModifyUserDetailsRequest()
+                .username("samuel")
+                .firstName("Samuel")
+                .lastName("Raynor");
+
+        when(userDao.findById(user.getId())).thenReturn(user);
+        when(userDao.existsByDisplayName("samuel")).thenReturn(false);
+        when(userDao.save(user)).thenReturn(user);
+        when(cvDao.findOptionalByUserIdAndStatus(user.getId(), CvStatus.ACTIVE)).thenReturn(cvEntity);
+
+        GetUserDetailsResponse response = userService.updateUserDetails(user.getId(), request);
+
+        assertEquals("samuel", response.getUsername());
+        assertEquals("Samuel", response.getFirstName());
+        assertEquals("Raynor", response.getLastName());
+        assertEquals(cvEntity.getId(), response.getCvId());
+    }
+
+    @Test
+    void updateUserDetails_rejectsDuplicateUsername() {
+        UserEntity user = buildUser(13L, "Max", "Lee", "max@jobly.test", "max");
+        ModifyUserDetailsRequest request = new ModifyUserDetailsRequest()
+                .username("taken");
+
+        when(userDao.findById(user.getId())).thenReturn(user);
+        when(userDao.existsByDisplayName("taken")).thenReturn(true);
+
+        assertThrows(NotUniqueUsernameException.class, () -> userService.updateUserDetails(user.getId(), request));
     }
 }

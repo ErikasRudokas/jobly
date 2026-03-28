@@ -1,10 +1,7 @@
 package com.jobly.service;
 
 import com.jobly.enums.TokenType;
-import com.jobly.exception.specific.InvalidCredentialsException;
-import com.jobly.exception.specific.NotUniqueEmailException;
-import com.jobly.exception.specific.NotUniqueUsernameException;
-import com.jobly.exception.specific.TokenRevokedException;
+import com.jobly.exception.specific.*;
 import com.jobly.gen.model.*;
 import com.jobly.model.UserEntity;
 import com.jobly.security.service.JwtService;
@@ -30,6 +27,10 @@ public class AuthenticationService {
         log.info("Login process started for user: {}", userLoginRequest.getEmail());
         var user = userService.findByEmail(userLoginRequest.getEmail())
                 .orElseThrow(() -> new InvalidCredentialsException("Invalid credentials."));
+
+        if (Boolean.TRUE.equals(user.getSuspended())) {
+            throw new SuspendedUserException("User is suspended. Please contact support.");
+        }
 
         authenticateUser(userLoginRequest, user);
 

@@ -119,6 +119,7 @@ class ApplicationRepositoryTests {
                 .email(email)
                 .passwordHash("hash")
                 .role(Role.USER)
+                .suspended(false)
                 .build();
         entityManager.persist(user);
         return user;

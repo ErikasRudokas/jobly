@@ -5,6 +5,7 @@ import com.jobly.gen.model.*;
 import com.jobly.security.service.JwtService;
 import com.jobly.service.CvService;
 import com.jobly.service.UserProfileService;
+import com.jobly.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class UsersApiHandler implements UsersApiDelegate {
     private final JwtService jwtService;
     private final CvService cvService;
     private final UserProfileService userProfileService;
+    private final UserService userService;
 
     @Override
     public ResponseEntity<GetUserDetailsResponse> getUserDetails() {
@@ -62,5 +64,12 @@ public class UsersApiHandler implements UsersApiDelegate {
     public ResponseEntity<GetUserProfileByIdResponse> getUserProfileById(Long userId) {
         log.info("Getting user profile by id: {}", userId);
         return ResponseEntity.ok(userProfileService.getUserProfileById(userId));
+    }
+
+    @Override
+    public ResponseEntity<GetUserDetailsResponse> updateUserDetails(ModifyUserDetailsRequest modifyUserDetailsRequest) {
+        Long userId = jwtService.extractUserId(httpServletRequest);
+        log.info("Modifying user profile for userId: {}", userId);
+        return ResponseEntity.ok(userService.updateUserDetails(userId, modifyUserDetailsRequest));
     }
 }

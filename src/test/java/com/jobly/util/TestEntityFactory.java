@@ -40,6 +40,7 @@ public final class TestEntityFactory {
                 .firstName("Alice")
                 .lastName("Boss")
                 .email("boss@jobly.test")
+                .suspended(false)
                 .build();
 
         return JobOfferEntity.builder()
@@ -60,6 +61,7 @@ public final class TestEntityFactory {
                 .firstName("John")
                 .lastName("Doe")
                 .email("john@jobly.test")
+                .suspended(false)
                 .build();
     }
 
@@ -78,6 +80,7 @@ public final class TestEntityFactory {
                 .lastName(lastName)
                 .email(email)
                 .displayName(displayName)
+                .suspended(false)
                 .build();
     }
 
@@ -89,6 +92,7 @@ public final class TestEntityFactory {
                 .email(email)
                 .displayName(displayName)
                 .passwordHash(passwordHash)
+                .suspended(false)
                 .build();
     }
 

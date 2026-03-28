@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -35,5 +36,17 @@ public class UserDao {
     public UserEntity findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+    }
+
+    public List<UserEntity> findSystemUsersBySearch(String search, Integer offset, Integer limit) {
+        int defaultOffset = offset != null ? offset : 0;
+        int defaultLimit = limit != null ? limit : 10;
+        String defaultSearch = search != null ? search : "";
+        return userRepository.findSystemUsersBySearch(defaultSearch, defaultLimit, defaultOffset);
+    }
+
+    public Integer countSystemUsersBySearch(String search) {
+        String defaultSearch = search != null ? search : "";
+        return userRepository.countSystemUsersBySearch(defaultSearch);
     }
 }

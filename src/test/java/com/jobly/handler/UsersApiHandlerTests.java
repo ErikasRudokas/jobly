@@ -7,6 +7,7 @@ import com.jobly.security.filter.JwtAuthenticationFilter;
 import com.jobly.security.service.JwtService;
 import com.jobly.service.CvService;
 import com.jobly.service.UserProfileService;
+import com.jobly.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,9 @@ class UsersApiHandlerTests {
 
     @MockitoBean
     private UserProfileService userProfileService;
+
+    @MockitoBean
+    private UserService userService;
 
     @Test
     void getUserDetails_returnsDetails() throws Exception {
@@ -163,5 +167,29 @@ class UsersApiHandlerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.education").isArray());
     }
-}
 
+    @Test
+    void updateUserDetails_returnsUpdatedDetails() throws Exception {
+        Long userId = 16L;
+        ModifyUserDetailsRequest request = new ModifyUserDetailsRequest()
+                .firstName("Elena")
+                .lastName("Stone")
+                .username("elena");
+        GetUserDetailsResponse response = new GetUserDetailsResponse()
+                .id(userId)
+                .firstName("Elena")
+                .lastName("Stone")
+                .email("elena@jobly.test")
+                .username("elena");
+
+        when(jwtService.extractUserId(any(HttpServletRequest.class))).thenReturn(userId);
+        when(userService.updateUserDetails(eq(userId), any(ModifyUserDetailsRequest.class))).thenReturn(response);
+
+        mockMvc.perform(patch("/api/v1/users/me")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(16))
+                .andExpect(jsonPath("$.email").value("elena@jobly.test"));
+    }
+}
