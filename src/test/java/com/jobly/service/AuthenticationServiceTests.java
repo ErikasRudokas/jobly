@@ -1,10 +1,7 @@
 package com.jobly.service;
 
 import com.jobly.enums.TokenType;
-import com.jobly.exception.specific.InvalidCredentialsException;
-import com.jobly.exception.specific.NotUniqueEmailException;
-import com.jobly.exception.specific.NotUniqueUsernameException;
-import com.jobly.exception.specific.TokenRevokedException;
+import com.jobly.exception.specific.*;
 import com.jobly.gen.model.*;
 import com.jobly.model.TokenEntity;
 import com.jobly.model.UserEntity;
@@ -190,5 +187,19 @@ class AuthenticationServiceTests {
         verify(tokenService).revokeAllUserTokensByType(user, TokenType.BEARER);
         verify(tokenService).saveToken(user, "new-access", TokenType.BEARER);
     }
-}
 
+    @Test
+    void login_suspendedUserThrows() {
+        UserLoginRequest request = new UserLoginRequest()
+                .email("suspended@jobly.test")
+                .password("secret");
+        UserEntity user = buildUserWithPassword(5L, "Sue", "Stone", "suspended@jobly.test", "sue", "encoded");
+        user.setSuspended(true);
+
+        when(userService.findByEmail(request.getEmail())).thenReturn(Optional.of(user));
+
+        assertThrows(SuspendedUserException.class, () -> authenticationService.login(request));
+        verify(authenticationManager, never()).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(tokenService, never()).saveToken(any(), any(), any());
+    }
+}

@@ -62,6 +62,9 @@ public class UserEntity implements UserDetails {
     @UpdateTimestamp
     private OffsetDateTime updatedAt;
 
+    @Column(name = "SUSPENDED", nullable = false)
+    private Boolean suspended;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.getValue()));

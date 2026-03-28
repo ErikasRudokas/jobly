@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(notFoundMessage, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({AuthorizationDeniedException.class, ForbiddenException.class})
+    @ExceptionHandler({AuthorizationDeniedException.class, ForbiddenException.class, SuspendedUserException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<ForbiddenMessage> handleForbiddenExceptions(Exception ex) {
         log.error(ex.getMessage());
