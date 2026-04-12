@@ -1,0 +1,43 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorsStyle awesome
+skinparam defaultFontSize 18
+skinparam padding 0
+skinparam nodesep 10
+skinparam ranksep 50
+
+actor "Neprisijungęs naudotojas" as Guest
+actor "Prisijungęs naudotojas" as AuthUser
+actor "Visi naudotojai" as AllUsers
+actor "Darbdavys" as Employer
+actor "Naudotojas, dirbantis su įgūdžiais" as SkillSeeker
+
+AllUsers <|-- Guest
+AllUsers <|-- AuthUser
+AuthUser <|-- SkillSeeker
+SkillSeeker <|-- Employer
+
+rectangle "Jobly sistema" {
+  package "Darbo pasiūlymų posistemė" {
+    usecase "Peržiūrėti darbo pasiūlymus" as UC_ViewJobOffers
+    usecase "Filtruoti darbo pasiūlymus" as UC_FilterJobOffers
+    usecase "Peržiūrėti darbo pasiūlymo informaciją" as UC_ViewJobOfferDetails
+    usecase "Valdyti darbo pasiūlymą" as UC_ManageJobOffers
+    usecase "Peržiūrėti kandidatų paraiškas" as UC_ViewJobOfferApplications
+    usecase "Filtruoti kandidatų paraiškas" as UC_FilterJobOfferApplications
+    usecase "Valdyti kandidatų paraiškas" as UC_ManageJobOfferApplications
+  }
+}
+
+AllUsers --> UC_ViewJobOffers
+AllUsers --> UC_ViewJobOfferDetails
+
+Employer --> UC_ManageJobOffers
+Employer --> UC_ViewJobOfferApplications
+
+UC_FilterJobOffers .> UC_ViewJobOffers : <<extend>>
+UC_FilterJobOfferApplications .left.> UC_ViewJobOfferApplications : <<extend>>
+UC_ManageJobOfferApplications .> UC_ViewJobOfferApplications : <<extend>>
+
+@enduml

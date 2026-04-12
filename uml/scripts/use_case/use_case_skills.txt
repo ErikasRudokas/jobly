@@ -1,0 +1,21 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorsStyle awesome
+skinparam defaultFontSize 18
+skinparam padding 0
+skinparam nodesep 10
+skinparam ranksep 50
+
+actor "Naudotojas, dirbantis su įgūdžiais" as SkillSeeker
+
+rectangle "Jobly sistema" {
+  package "Įgūdžių posistemė" {
+    usecase "Ieškoti įgūdžių" as UC_SearchSkills
+  }
+}
+
+SkillSeeker --> UC_SearchSkills
+
+
+@enduml

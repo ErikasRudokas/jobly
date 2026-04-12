@@ -1,0 +1,24 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorsStyle awesome
+skinparam defaultFontSize 18
+skinparam padding 0
+skinparam nodesep 10
+skinparam ranksep 50
+
+actor "Administratorius" as Admin
+
+rectangle "Jobly sistema" {
+  package "Darbo kategorijų posistemė" {
+    usecase "Peržiūrėti kategorijas" as UC_ViewCategories
+    usecase "Valdyti kategoriją" as UC_ManageCategory
+  }
+}
+
+Admin --> UC_ViewCategories
+
+UC_ManageCategory .> UC_ViewCategories : <<extend>>
+
+@enduml
+

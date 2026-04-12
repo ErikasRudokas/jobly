@@ -1,0 +1,25 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorsStyle awesome
+skinparam defaultFontSize 18
+skinparam padding 0
+skinparam nodesep 10
+skinparam ranksep 50
+
+actor "Neprisijungęs naudotojas" as Guest
+actor "Prisijungęs naudotojas" as AuthUser
+
+rectangle "Jobly sistema" {
+  package "Autentifikacijos posistemė" {
+    usecase "Registruotis" as UC_Register
+    usecase "Prisijungti" as UC_Login
+    usecase "Atsijungti" as UC_Logout
+  }
+}
+
+Guest --> UC_Register
+Guest --> UC_Login
+AuthUser --> UC_Logout
+
+@enduml

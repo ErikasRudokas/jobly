@@ -1,0 +1,198 @@
+@startuml
+' Paketu diagrama pagal backend struktura
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 60
+left to right direction
+
+package "com.jobly" {
+  class JoblyApplication
+}
+
+package "com.jobly.config" {
+  class CvParserApiConfig
+}
+
+package "com.jobly.dao" {
+  class AdminUserActionDao
+  class ApplicationDao
+  class CategoryDao
+  class CvDao
+  class JobOfferDao
+  class JobSkillDao
+  class SkillDao
+  class TokenDao
+  class UserDao
+  class UserEducationDao
+  class UserSkillDao
+  class UserWorkExperienceDao
+}
+
+package "com.jobly.dto" {
+  class ApplicationFilterWrapper
+  class PaginationAndFilterWrapper
+}
+
+package "com.jobly.enums" {
+  enum CvStatus
+  enum FileType
+  enum Role
+  enum TokenType
+}
+
+package "com.jobly.exception" {
+  class GlobalExceptionHandler
+}
+
+package "com.jobly.exception.general" {
+  class BadRequestException
+  class ForbiddenException
+  class NotFoundException
+  class SystemException
+}
+
+package "com.jobly.exception.specific" {
+  class IncorrectTokenUsageException
+  class InvalidCredentialsException
+  class NotUniqueEmailException
+  class NotUniqueUsernameException
+  class SuspendedUserException
+  class TokenRevokedException
+  class UserNotFoundException
+}
+
+package "com.jobly.handler" {
+  class AdminApiHandler
+  class ApplicationApiHandler
+  class AuthApiHandler
+  class CategoryApiHandler
+  class JobOfferApiHandler
+  class SkillHandler
+  class UsersApiHandler
+}
+
+package "com.jobly.mapper" {
+  class ApplicationMapper
+  class CategoryMapper
+  class CommonMapper
+  class CvMapper
+  class JobOfferMapper
+  class JobSkillMapper
+  class SkillMapper
+  class UserEducationMapper
+  class UserMapper
+  class UserSkillMapper
+  class UserWorkExperienceMapper
+}
+
+package "com.jobly.model" {
+  class AdminUserActionEntity
+  class ApplicationEntity
+  class CategoryEntity
+  class JobOfferEntity
+  class JobSkillEntity
+  class SkillAliasEntity
+  class SkillEntity
+  class TokenEntity
+  class UserCvEntity
+  class UserEducationEntity
+  class UserEntity
+  class UserSkillEntity
+  class UserWorkExperienceEntity
+}
+
+package "com.jobly.model.converter" {
+  class SkillEmbeddingConverter
+}
+
+package "com.jobly.repository" {
+  class AdminUserActionRepository
+  class ApplicationRepository
+  class CategoryRepository
+  class JobOfferRepository
+  class JobSkillRepository
+  class SkillAliasRepository
+  class SkillRepository
+  class TokenRepository
+  class UserCvRepository
+  class UserEducationRepository
+  class UserRepository
+  class UserSkillRepository
+  class UserWorkExperienceRepository
+}
+
+package "com.jobly.security" {
+  class AuthConfig
+  class CorsConfig
+  class SecurityConfig
+}
+
+package "com.jobly.security.filter" {
+  class JwtAuthenticationFilter
+}
+
+package "com.jobly.security.handler" {
+  class AuthExceptionHandler
+  class CustomLogoutHandler
+  class FilterChainExceptionHandler
+}
+
+package "com.jobly.security.service" {
+  class CustomUserDetailsService
+  class JwtService
+}
+
+package "com.jobly.service" {
+  class AdminUserService
+  class ApplicationService
+  class AuthenticationService
+  class CategoryService
+  class CvService
+  class JobOfferService
+  class SkillService
+  class TokenService
+  class UserProfileService
+  class UserService
+}
+
+package "com.jobly.service.api" {
+  class CvParserApiService
+}
+
+package "com.jobly.service.handler" {
+  class CvParseHandler
+}
+
+package "com.jobly.service.validator" {
+  class UserProfileValidator
+}
+
+package "com.jobly.util" {
+  class DateUtils
+  class ExceptionHandlerUtils
+  class HttpHeaderConstants
+  class SkillSimilarityUtils
+}
+
+' Paketiniu priklausomybiu vaizdavimas
+"com.jobly.handler" ..> "com.jobly.service"
+"com.jobly.service" ..> "com.jobly.repository"
+"com.jobly.service" ..> "com.jobly.dao"
+"com.jobly.service" ..> "com.jobly.mapper"
+"com.jobly.service" ..> "com.jobly.dto"
+"com.jobly.service" ..> "com.jobly.util"
+"com.jobly.repository" ..> "com.jobly.model"
+"com.jobly.dao" ..> "com.jobly.model"
+"com.jobly.mapper" ..> "com.jobly.model"
+"com.jobly.model" ..> "com.jobly.enums"
+"com.jobly.security" ..> "com.jobly.security.filter"
+"com.jobly.security" ..> "com.jobly.security.handler"
+"com.jobly.security" ..> "com.jobly.security.service"
+"com.jobly.security.service" ..> "com.jobly.repository"
+"com.jobly.security.service" ..> "com.jobly.enums"
+"com.jobly.exception" ..> "com.jobly.exception.general"
+"com.jobly.exception" ..> "com.jobly.exception.specific"
+
+@enduml
+

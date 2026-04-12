@@ -1,0 +1,38 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorsStyle awesome
+skinparam defaultFontSize 18
+skinparam padding 0
+skinparam nodesep 10
+skinparam ranksep 50
+
+actor "Prisijungęs naudotojas" as AuthUser
+actor "Naudotojas, dirbantis su įgūdžiais" as SkillSeeker
+actor "Naudotojas" as JobSeeker
+actor "Darbdavys" as Employer
+actor "Gyvenimo aprašymo apdorojimo sistema" as CvService
+
+AuthUser <|-- SkillSeeker
+SkillSeeker <|-- JobSeeker
+SkillSeeker <|-- Employer
+
+rectangle "Jobly sistema" {
+  package "Naudotojo profilio posistemė" {
+    usecase "Valdyti savo profilį" as UC_ManageProfile
+    usecase "Valdyti savo įgūdžius, patirtį ir išsilavinimą" as UC_ManageProfileDetails
+    usecase "Peržiūrėti naudotojo profilį, įgūdžius,\npatirtį ir išsilavinimą" as UC_ViewAnyProfile
+    usecase "Įkelti gyvenimo aprašymą" as UC_UploadCv
+    usecase "Atsisiųsti gyvenimo aprašymą" as UC_DownloadCv
+  }
+}
+
+AuthUser --> UC_ManageProfile
+JobSeeker --> UC_ManageProfileDetails
+JobSeeker --> UC_UploadCv
+Employer --> UC_ViewAnyProfile
+SkillSeeker --> UC_DownloadCv
+
+UC_UploadCv --> CvService : "Apdoroti CV"
+
+@enduml

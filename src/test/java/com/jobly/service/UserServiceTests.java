@@ -80,6 +80,7 @@ class UserServiceTests {
                 .lastName("Roe")
                 .username("jane")
                 .email("jane@jobly.test")
+                .role(UserRegisterRequest.RoleEnum.USER)
                 .password("secret");
 
         when(passwordEncoder.encode("secret")).thenReturn("encoded");
