@@ -7,7 +7,6 @@ import com.jobly.gen.model.UserWorkExperience;
 import com.jobly.gen.model.UserWorkExperienceBase;
 import com.jobly.model.UserEntity;
 import com.jobly.model.UserWorkExperienceEntity;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

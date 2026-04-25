@@ -19,7 +19,7 @@ AuthUser <|-- SkillSeeker
 SkillSeeker <|-- Employer
 
 rectangle "Jobly sistema" {
-  package "Darbo pasiūlymų posistemė" {
+  package "Darbo pasiūlymų posistemis" {
     usecase "Peržiūrėti darbo pasiūlymus" as UC_ViewJobOffers
     usecase "Filtruoti darbo pasiūlymus" as UC_FilterJobOffers
     usecase "Peržiūrėti darbo pasiūlymo informaciją" as UC_ViewJobOfferDetails

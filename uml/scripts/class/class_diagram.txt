@@ -1,0 +1,301 @@
+@startuml
+' JobOfferApiHandler-related class diagram (usage relationships only, no generated models)
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+left to right direction
+
+package "com.jobly.handler" {
+  class JobOfferApiHandler {
+    +getAllJobOffers(search, offset, limit)
+    +getJobOfferById(id)
+    +getOwnedJobOffers(search, offset, limit)
+    +getOwnedJobOfferDetails(id)
+    +getOwnedJobOfferApplications(id, status, offset, limit)
+    +createJobOffer(createJobOfferRequest)
+    +updateJobOffer(id, updateJobOfferRequest)
+    +deleteJobOffer(id)
+    +applyToJobOffer(jobOfferId, applicationCreateRequest)
+    +canApplyToJobOffer(jobOfferId)
+  }
+}
+
+package "com.jobly.security.service" {
+  class JwtService {
+    +extractUsername(token)
+    +generateToken(userDetails)
+    +generateRefreshToken(userDetails)
+    +isTokenValid(token, userDetails)
+    +isTokenExpired(token)
+    +extractUserId(request)
+    +extractUserIdOrNull(request)
+    +extractClaim(token, claimsResolver)
+    +extractAllClaims(token)
+    +isRefreshToken(token)
+    +isBearerToken(token)
+    +extractTokenFromRequest(request)
+  }
+}
+
+package "com.jobly.service" {
+  class JobOfferService {
+    +findAll(userId, paginationAndFilterWrapper)
+    +findById(id)
+    +findJobOffersByUserId(userId, paginationAndFilterWrapper)
+    +findOwnedJobOfferDetails(jobOfferId, userId)
+    +findOwnedJobOfferApplications(jobOfferId, userId, filterWrapper)
+    +createJobOffer(createJobOfferRequest, userId)
+    +updateJobOffer(updateJobOfferRequest, jobOfferId, userId)
+    +deleteJobOffer(id, userId)
+    +applyToJobOffer(jobOfferId, userId, applicationCreateRequest)
+    +canApplyToJobOffer(jobOfferId, userId)
+  }
+
+  class UserService {
+    +findByEmail(email)
+    +existsByEmail(email)
+    +existsByUsername(username)
+    +save(registerRequest)
+    +findById(userId)
+    +isCurrentUserEmployer(userId)
+    +updateUserDetails(userId, request)
+  }
+
+  class CategoryService {
+    +findById(id)
+    +findAll()
+    +createCategory(categoryCreateRequest)
+    +updateCategory(id, categoryUpdateRequest)
+    +deleteCategoryById(id)
+    +findEntityById(id)
+  }
+
+  class UserProfileService {
+    +getUserProfile(userId)
+    +saveUserProfile(userId, saveUserProfileRequest)
+    +getUserProfileById(userId)
+    +isUserProfileSetUp(userId)
+    +isUserProfileReviewed(userId)
+  }
+}
+
+package "com.jobly.dao" {
+  class JobOfferDao {
+    +findById(id)
+    +save(jobOfferEntity)
+    +delete(jobOffer)
+    +findAllWithPaginationAndFilter(paginationAndFilterWrapper)
+    +countAllWithFilter(search)
+    +findByUserIdWithFilter(userId, paginationAndFilterWrapper)
+    +countByUserIdWithFilter(userId, search)
+  }
+
+  class ApplicationDao {
+    +saveApplication(application)
+    +findAllByUserId(userId, filterWrapper)
+    +findApplicationOfUser(userId, applicationId)
+    +save(application)
+    +findById(applicationId)
+    +getCountOfAllPendingByJobOfferId(jobOfferId)
+    +getCountOfAllRelevantApplicationsByJobOfferId(jobOfferId)
+    +isUserAlreadyAppliedToJobOffer(userId, jobOfferId)
+    +findAllApplicationsByJobOffer(jobOfferId)
+    +countAllByUserId(userId, filterWrapper)
+    +findAllByJobOfferId(jobOfferId, filterWrapper)
+    +countAllByJobOfferId(jobOfferId, filterWrapper)
+  }
+
+  class JobSkillDao {
+    +findAllByJobOfferId(id)
+    +saveAll(jobSkillEntities)
+    +deleteAllByIds(jobSkillsToDelete, jobOfferId)
+  }
+
+  class SkillDao {
+    +searchSkills(value, offset, limit)
+    +countSkillsBySearch(value)
+    +findAllByIds(ids)
+    +findAllSkillAliases()
+  }
+
+  class CvDao {
+    +save(entity)
+    +saveAll(entities)
+    +findAllByUserId(userId)
+    +findByUserIdAndStatus(userId, cvStatus)
+    +findById(cvId)
+    +findOptionalByUserIdAndStatus(userId, cvStatus)
+    +existsByUserId(userId)
+    +findMostRecentCv(userId)
+  }
+
+  class UserSkillDao {
+    +saveAll(userSkillEntities)
+    +existsByUserId(userId)
+    +findAllByUserId(userId)
+    +deleteAll(skillsToDelete)
+  }
+}
+
+package "com.jobly.repository" {
+  class JobOfferRepository {
+    +findAllByCreatorId(userId)
+    +findAllWithFilter(search, limit, offset)
+    +countAllWithFilter(search)
+    +findAllByUserIdWithFilter(userId, search, limit, offset)
+    +countAllByUserIdWithFilter(userId, search)
+  }
+
+  class ApplicationRepository {
+    +findByApplicantIdAndId(applicantId, id)
+    +countAllByJobOfferIdAndStatus(jobOfferId, status)
+    +countAllByJobOfferIdAndStatusIn(jobOfferId, statuses)
+    +existsByApplicantIdAndJobOfferIdAndStatusIn(userId, jobOfferId, statuses)
+    +findAllByJobOfferIdAndStatusIn(jobOfferId, statuses)
+    +findAllByUserIdAndFilter(userId, statuses, limit, offset)
+    +countAllByUserIdAndFilter(userId, statuses)
+    +findAllByJobOfferIdAndFilter(jobOfferId, statuses, limit, offset)
+    +countAllByJobOfferIdAndFilter(jobOfferId, statuses)
+  }
+
+  class JobSkillRepository {
+    +findByJobOfferId(id)
+    +deleteAllBySkillIdInAndJobOfferId(skillIds, jobOfferId)
+  }
+
+  class SkillRepository {
+    +findAllSkillsByAliasSearch(value, limit, offset)
+    +countAllSkillsByAliasSearch(value)
+  }
+
+  class SkillAliasRepository
+
+  class UserCvRepository {
+    +findAllByUserId(userId)
+    +findByUserIdAndStatus(userId, cvStatus)
+    +existsByUserId(userId)
+    +findAllByUserIdAndStatusOrderByUploadedAtDesc(userId, cvStatus)
+  }
+
+  class UserSkillRepository {
+    +existsByUserId(userId)
+    +findAllByUserId(userId)
+  }
+}
+
+package "com.jobly.mapper" {
+  class CommonMapper {
+    +toPaginationAndFilterWrapper(search, offset, limit)
+    +toApplicationFilterWrapper(status, offset, limit)
+  }
+
+  class JobOfferMapper {
+    +toJobOffer(jobOfferEntity, skills)
+    +toJobOfferWithSkillMatchListObject(jobOfferEntity, skillMatch)
+    +toJobOfferListObject(jobOfferEntity)
+    +toJobOfferDetailsResponse(jobOffer, skills)
+    +toJobOfferEntity(createJobOfferRequest, user, category)
+    +updateJobOfferEntity(jobOffer, updateJobOfferRequest, category)
+  }
+
+  class JobSkillMapper {
+    +toJobSkillEntity(skillEntity, jobOfferEntity, proficiency)
+  }
+
+  class ApplicationMapper {
+    +toApplicationEntity(request, applicant, jobOffer)
+    +toApplication(applicationEntity, cvId)
+    +toApplicationWithSkillMatch(applicationEntity, cvId, skillMatch)
+    +toApplicationListObject(application)
+    +toMyApplication(application, cvId)
+  }
+
+  class CategoryMapper {
+    +toCategory(categoryEntity)
+    +toCategoryEntity(categoryCreateRequest)
+    +updateEntity(existingCategory, categoryUpdateRequest)
+    +toJobOfferCategory(category)
+  }
+
+  class UserMapper {
+    +toUserEntityFromRegisterRequest(registerRequest)
+    +toUserRegisterResponse(userEntity)
+    +toCreator(userEntity)
+    +toGetUserDetailsResponse(userEntity, userCv)
+    +toApplicant(userEntity)
+  }
+
+  class SkillMapper {
+    +toSkillDetails(skillEntity)
+    +toJobOfferSkill(jobSkillEntity)
+  }
+}
+
+package "com.jobly.util" {
+  class SkillSimilarityUtils {
+    +computeSkillMatch(jobSkills, userSkills)
+  }
+}
+
+package "com.jobly.dto" {
+  class PaginationAndFilterWrapper {
+    +getSearch()
+    +setSearch(search)
+    +getOffset()
+    +setOffset(offset)
+    +getLimit()
+    +setLimit(limit)
+  }
+
+  class ApplicationFilterWrapper {
+    +getStatus()
+    +setStatus(status)
+    +getOffset()
+    +setOffset(offset)
+    +getLimit()
+    +setLimit(limit)
+  }
+}
+
+JobOfferApiHandler ..> JobOfferService
+JobOfferApiHandler ..> JwtService
+JobOfferApiHandler ..> CommonMapper
+
+JobOfferService ..> JobOfferDao
+JobOfferService ..> ApplicationDao
+JobOfferService ..> JobSkillDao
+JobOfferService ..> SkillDao
+JobOfferService ..> CvDao
+JobOfferService ..> UserSkillDao
+JobOfferService ..> UserService
+JobOfferService ..> CategoryService
+JobOfferService ..> UserProfileService
+JobOfferService ..> JobOfferMapper
+JobOfferService ..> JobSkillMapper
+JobOfferService ..> ApplicationMapper
+JobOfferService ..> SkillSimilarityUtils
+JobOfferService ..> PaginationAndFilterWrapper
+JobOfferService ..> ApplicationFilterWrapper
+
+JobOfferDao ..> JobOfferRepository
+JobOfferDao ..> PaginationAndFilterWrapper
+
+ApplicationDao ..> ApplicationRepository
+ApplicationDao ..> ApplicationFilterWrapper
+
+JobSkillDao ..> JobSkillRepository
+SkillDao ..> SkillRepository
+SkillDao ..> SkillAliasRepository
+CvDao ..> UserCvRepository
+UserSkillDao ..> UserSkillRepository
+
+CommonMapper ..> PaginationAndFilterWrapper
+CommonMapper ..> ApplicationFilterWrapper
+
+JobOfferMapper ..> CategoryMapper
+JobOfferMapper ..> UserMapper
+JobOfferMapper ..> SkillMapper
+ApplicationMapper ..> UserMapper
+ApplicationMapper ..> JobOfferMapper
+
+@enduml
+

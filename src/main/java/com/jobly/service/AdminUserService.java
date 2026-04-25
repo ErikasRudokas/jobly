@@ -50,7 +50,7 @@ public class AdminUserService {
 
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public void manageAdminUserStatus(Long targetUserId, Long adminUserId, AdminUserStatusManageRequest request) {
-        if (request == null || request.getAction() == null || request.getComment() == null) {
+        if (request == null) {
             throw new BadRequestException("Action and comment are required.");
         }
         if (request.getComment().isBlank()) {

@@ -18,7 +18,7 @@ SkillSeeker <|-- JobSeeker
 SkillSeeker <|-- Employer
 
 rectangle "Jobly sistema" {
-  package "Naudotojo profilio posistemė" {
+  package "Naudotojo profilio posistemis" {
     usecase "Valdyti savo profilį" as UC_ManageProfile
     usecase "Valdyti savo įgūdžius, patirtį ir išsilavinimą" as UC_ManageProfileDetails
     usecase "Peržiūrėti naudotojo profilį, įgūdžius,\npatirtį ir išsilavinimą" as UC_ViewAnyProfile

@@ -48,7 +48,7 @@ public class SkillSimilarityUtils {
         }
 
         float result = totalScore / jobSkills.size();
-        return Math.max(0.0F, Math.min(1.0F, result));
+        return Math.clamp(result, 0.0F, 1.0F);
     }
 
     private static float proficiencyPenaltyFactor(SkillProficiency expectedProficiency, SkillProficiency actualProficiency) {
@@ -61,7 +61,9 @@ public class SkillSimilarityUtils {
     private static float cosineSimilarity(Float[] a, Float[] b) {
         if (a == null || b == null || ObjectUtils.isEmpty(a) || ObjectUtils.isEmpty(b)) return 0.0F;
 
-        float dot = 0F, normA = 0F, normB = 0F;
+        float dot = 0F;
+        float normA = 0F;
+        float normB = 0F;
         for (int i = 0; i < Math.min(a.length, b.length); i++) {
             dot += a[i] * b[i];
             normA += a[i] * a[i];

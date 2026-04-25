@@ -7,7 +7,6 @@ import com.jobly.gen.model.UserSkillBase;
 import com.jobly.model.SkillEntity;
 import com.jobly.model.UserEntity;
 import com.jobly.model.UserSkillEntity;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

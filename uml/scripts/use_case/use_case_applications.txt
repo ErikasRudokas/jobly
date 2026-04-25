@@ -10,7 +10,7 @@ skinparam ranksep 50
 actor "Naudotojas" as JobSeeker
 
 rectangle "Jobly sistema" {
-  package "Kandidatavimo posistemė" {
+  package "Kandidatavimo posistemis" {
     usecase "Kandidatuoti į darbo pasiūlymą" as UC_Apply
     usecase "Peržiūrėti savo paraiškas" as UC_ViewMyApplications
     usecase "Filtruoti savo paraiškas" as UC_FilterMyApplications

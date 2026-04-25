@@ -25,13 +25,13 @@ AllUsers <|-- AuthUser
 
 rectangle "Jobly sistema" {
 
-  package "Autentifikacijos posistemė" {
+  package "Autentifikacijos posistemis" {
     usecase "Registruotis" as UC_Register
     usecase "Prisijungti" as UC_Login
     usecase "Atsijungti" as UC_Logout
   }
 
-  package "Naudotojo profilio posistemė" {
+  package "Naudotojo profilio posistemis" {
     usecase "Valdyti savo profilį" as UC_ManageProfile
     usecase "Valdyti savo įgūdžius, patirtį ir išsilavinimą" as UC_ManageProfileDetails
     usecase "Peržiūrėti naudotojo profilį, įgūdžius,\npatirtį ir išsilavinimą" as UC_ViewAnyProfile
@@ -39,7 +39,7 @@ rectangle "Jobly sistema" {
     usecase "Atsisiųsti gyvenimo aprašymą" as UC_DownloadCv
   }
 
-  package "Darbo pasiūlymų posistemė" {
+  package "Darbo pasiūlymų posistemis" {
     usecase "Peržiūrėti darbo pasiūlymus" as UC_ViewJobOffers
     usecase "Filtruoti darbo pasiūlymus" as UC_FilterJobOffers
     usecase "Peržiūrėti darbo pasiūlymo informaciją" as UC_ViewJobOfferDetails
@@ -49,25 +49,25 @@ rectangle "Jobly sistema" {
     usecase "Valdyti kandidatų paraiškas" as UC_ManageJobOfferApplications
   }
 
-  package "Kandidatavimo posistemė" {
+  package "Kandidatavimo posistemis" {
       usecase "Kandidatuoti į darbo pasiūlymą" as UC_Apply
       usecase "Peržiūrėti savo paraiškas" as UC_ViewMyApplications
       usecase "Filtruoti savo paraiškas" as UC_FilterMyApplications
       usecase "Valdyti paraišką" as UC_ManageApplications
   }
 
-  package "Įgūdžių posistemė" {
+  package "Įgūdžių posistemis" {
     usecase "Ieškoti įgūdžių" as UC_SearchSkills
   }
 
-  package "Naudotojų administravimo posistemė" {
+  package "Naudotojų administravimo posistemis" {
     usecase "Peržiūrėti naudotojų sąrašą" as UC_ViewUsers
     usecase "Filtruoti naudotojus" as UC_FilterUsers
     usecase "Peržiūrėti naudotojo būsenų istoriją" as UC_ViewUserStatusHistory
     usecase "Valdyti naudotojo būseną" as UC_ManageUserStatus
   }
 
-  package "Darbo kategorijų posistemė" {
+  package "Darbo kategorijų posistemis" {
     usecase "Peržiūrėti kategorijas" as UC_ViewCategories
     usecase "Valdyti kategoriją" as UC_ManageCategory
   }

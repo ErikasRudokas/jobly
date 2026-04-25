@@ -10,7 +10,7 @@ skinparam ranksep 50
 actor "Naudotojas, dirbantis su įgūdžiais" as SkillSeeker
 
 rectangle "Jobly sistema" {
-  package "Įgūdžių posistemė" {
+  package "Įgūdžių posistemis" {
     usecase "Ieškoti įgūdžių" as UC_SearchSkills
   }
 }

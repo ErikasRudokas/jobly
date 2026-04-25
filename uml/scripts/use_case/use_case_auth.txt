@@ -11,7 +11,7 @@ actor "Neprisijungęs naudotojas" as Guest
 actor "Prisijungęs naudotojas" as AuthUser
 
 rectangle "Jobly sistema" {
-  package "Autentifikacijos posistemė" {
+  package "Autentifikacijos posistemis" {
     usecase "Registruotis" as UC_Register
     usecase "Prisijungti" as UC_Login
     usecase "Atsijungti" as UC_Logout

@@ -10,7 +10,7 @@ skinparam ranksep 50
 actor "Administratorius" as Admin
 
 rectangle "Jobly sistema" {
-  package "Naudotojų administravimo posistemė" {
+  package "Naudotojų administravimo posistemis" {
     usecase "Peržiūrėti naudotojų sąrašą" as UC_ViewUsers
     usecase "Filtruoti naudotojus" as UC_FilterUsers
     usecase "Peržiūrėti naudotojo būsenų istoriją" as UC_ViewUserStatusHistory
@@ -25,4 +25,3 @@ UC_FilterUsers .> UC_ViewUsers : <<extend>>
 UC_ManageUserStatus .> UC_ViewUserStatusHistory : <<extend>>
 
 @enduml
-
