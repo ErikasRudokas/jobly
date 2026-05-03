@@ -14,7 +14,7 @@ actor "Naudotojas" as JobSeeker
 actor "Naudotojas, dirbantis su įgūdžiais" as SkillSeeker
 actor "Darbdavys" as Employer
 actor "Administratorius" as Admin
-actor "Gyvenimo aprašymo apdorojimo sistema" as CvService
+actor "Gyvenimo aprašymo \napdorojimo sistema" as CvService
 
 AuthUser <|-- SkillSeeker
 SkillSeeker <|-- JobSeeker
