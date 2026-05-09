@@ -1,5 +1,6 @@
 package com.jobly.dao;
 
+import com.jobly.dto.JobOfferFilterWrapper;
 import com.jobly.dto.PaginationAndFilterWrapper;
 import com.jobly.exception.general.NotFoundException;
 import com.jobly.model.JobOfferEntity;
@@ -30,21 +31,31 @@ public class JobOfferDao {
         jobOfferRepository.delete(jobOffer);
     }
 
-    public List<JobOfferEntity> findAllWithPaginationAndFilter(PaginationAndFilterWrapper paginationAndFilterWrapper) {
-        String search = paginationAndFilterWrapper.getSearch();
-        Integer offset = paginationAndFilterWrapper.getOffset();
-        Integer limit = paginationAndFilterWrapper.getLimit();
+    public List<JobOfferEntity> findAllWithPaginationAndFilter(JobOfferFilterWrapper paginationAndFilterWrapper) {
+        int offset = paginationAndFilterWrapper.getOffset() != null ? paginationAndFilterWrapper.getOffset() : 0;
+        int limit = paginationAndFilterWrapper.getLimit() != null ? paginationAndFilterWrapper.getLimit() : 10;
 
-        int defaultOffset = offset != null ? offset : 0;
-        int defaultLimit = limit != null ? limit : 10;
-        String defaultSearch = search != null ? search : "";
-
-        return jobOfferRepository.findAllWithFilter(defaultSearch, defaultLimit, defaultOffset);
+        return jobOfferRepository.findAllWithFilter(
+                paginationAndFilterWrapper.getSearch(),
+                paginationAndFilterWrapper.getCategoryId(),
+                paginationAndFilterWrapper.getWorkType() != null ? paginationAndFilterWrapper.getWorkType().name() : null,
+                paginationAndFilterWrapper.getLocation(),
+                paginationAndFilterWrapper.getSalaryFrom(),
+                paginationAndFilterWrapper.getSalaryTo(),
+                limit,
+                offset
+        );
     }
 
-    public Integer countAllWithFilter(String search) {
-        String defaultSearch = (search != null) ? search : "";
-        return jobOfferRepository.countAllWithFilter(defaultSearch);
+    public Integer countAllWithFilter(JobOfferFilterWrapper paginationAndFilterWrapper) {
+        return jobOfferRepository.countAllWithFilter(
+                paginationAndFilterWrapper.getSearch(),
+                paginationAndFilterWrapper.getCategoryId(),
+                paginationAndFilterWrapper.getWorkType() != null ? paginationAndFilterWrapper.getWorkType().name() : null,
+                paginationAndFilterWrapper.getLocation(),
+                paginationAndFilterWrapper.getSalaryFrom(),
+                paginationAndFilterWrapper.getSalaryTo()
+        );
     }
 
     public List<JobOfferEntity> findByUserIdWithFilter(Long userId, PaginationAndFilterWrapper paginationAndFilterWrapper) {

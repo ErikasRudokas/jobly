@@ -472,6 +472,31 @@ paths:
             type: integer
             format: int32
           description: The numbers of items to return
+        - name: categoryId
+          in: query
+          schema:
+            type: integer
+          description: Filter by job category ID
+        - name: workType
+          in: query
+          schema:
+            $ref: '#/components/schemas/WorkType'
+          description: Filter by work type (ON_SITE, REMOTE, HYBRID)
+        - name: location
+          in: query
+          schema:
+            type: string
+          description: Free-text location filter (e.g. city or country name)
+        - name: salaryFrom
+          in: query
+          schema:
+            type: integer
+          description: Minimum salary filter
+        - name: salaryTo
+          in: query
+          schema:
+            type: integer
+          description: Maximum salary filter
       operationId: getAllJobOffers
       responses:
         '200':

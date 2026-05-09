@@ -2,6 +2,7 @@ package com.jobly.service;
 
 import com.jobly.dao.*;
 import com.jobly.dto.ApplicationFilterWrapper;
+import com.jobly.dto.JobOfferFilterWrapper;
 import com.jobly.dto.PaginationAndFilterWrapper;
 import com.jobly.exception.general.BadRequestException;
 import com.jobly.exception.general.ForbiddenException;
@@ -58,7 +59,7 @@ class JobOfferServiceTests {
 
     @Test
     void findAll_withoutUserId_returnsNullSkillMatch() {
-        PaginationAndFilterWrapper wrapper = PaginationAndFilterWrapper.builder()
+        JobOfferFilterWrapper wrapper = JobOfferFilterWrapper.builder()
                 .search("dev")
                 .offset(0)
                 .limit(10)
@@ -66,7 +67,7 @@ class JobOfferServiceTests {
         JobOfferEntity jobOffer = buildJobOffer(1L, 10L);
 
         when(jobOfferDao.findAllWithPaginationAndFilter(wrapper)).thenReturn(List.of(jobOffer));
-        when(jobOfferDao.countAllWithFilter(wrapper.getSearch())).thenReturn(1);
+        when(jobOfferDao.countAllWithFilter(wrapper)).thenReturn(1);
         when(jobSkillDao.findAllByJobOfferId(jobOffer.getId())).thenReturn(List.of());
 
         GetAllJobOffersResponse response = jobOfferService.findAll(null, wrapper);
@@ -80,7 +81,7 @@ class JobOfferServiceTests {
     @Test
     void findAll_withUserId_returnsSkillMatch() {
         Long userId = 25L;
-        PaginationAndFilterWrapper wrapper = PaginationAndFilterWrapper.builder()
+        JobOfferFilterWrapper wrapper = JobOfferFilterWrapper.builder()
                 .search("dev")
                 .offset(0)
                 .limit(10)
@@ -94,7 +95,7 @@ class JobOfferServiceTests {
 
         when(userSkillDao.findAllByUserId(userId)).thenReturn(List.of(userSkill));
         when(jobOfferDao.findAllWithPaginationAndFilter(wrapper)).thenReturn(List.of(jobOffer));
-        when(jobOfferDao.countAllWithFilter(wrapper.getSearch())).thenReturn(1);
+        when(jobOfferDao.countAllWithFilter(wrapper)).thenReturn(1);
         when(jobSkillDao.findAllByJobOfferId(jobOffer.getId())).thenReturn(List.of(jobSkill));
 
         GetAllJobOffersResponse response = jobOfferService.findAll(userId, wrapper);

@@ -2,6 +2,7 @@ package com.jobly.service;
 
 import com.jobly.dao.*;
 import com.jobly.dto.ApplicationFilterWrapper;
+import com.jobly.dto.JobOfferFilterWrapper;
 import com.jobly.dto.PaginationAndFilterWrapper;
 import com.jobly.exception.general.BadRequestException;
 import com.jobly.exception.general.ForbiddenException;
@@ -36,11 +37,11 @@ public class JobOfferService {
     private final UserProfileService userProfileService;
     private final UserSkillDao userSkillDao;
 
-    public GetAllJobOffersResponse findAll(Long userId, PaginationAndFilterWrapper paginationAndFilterWrapper) {
+    public GetAllJobOffersResponse findAll(Long userId, JobOfferFilterWrapper paginationAndFilterWrapper) {
         List<UserSkillEntity> userSkills = userId != null ? userSkillDao.findAllByUserId(userId) : List.of();
 
         List<JobOfferEntity> filteredJobOffers = jobOfferDao.findAllWithPaginationAndFilter(paginationAndFilterWrapper);
-        Integer totalJobOfferCount = jobOfferDao.countAllWithFilter(paginationAndFilterWrapper.getSearch());
+        Integer totalJobOfferCount = jobOfferDao.countAllWithFilter(paginationAndFilterWrapper);
 
         var jobOffers = getProcessedJobOffers(filteredJobOffers, userSkills);
         return new GetAllJobOffersResponse()

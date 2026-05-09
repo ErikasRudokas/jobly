@@ -25,10 +25,11 @@ public class JobOfferApiHandler implements JobOffersApiDelegate {
     private final JwtService jwtService;
 
     @Override
-    public ResponseEntity<GetAllJobOffersResponse> getAllJobOffers(String search, Integer offset, Integer limit){
+    public ResponseEntity<GetAllJobOffersResponse> getAllJobOffers(String search, Integer offset, Integer limit, Integer categoryId,
+                                                                   WorkType workType, String location, Integer salaryFrom, Integer salaryTo){
         var userId = jwtService.extractUserIdOrNull(httpServletRequest);
         log.info("Getting all the job offers");
-        var paginationAndFilterWrapper = CommonMapper.toPaginationAndFilterWrapper(search, offset, limit);
+        var paginationAndFilterWrapper = CommonMapper.toJobOfferFilterWrapper(search, offset, limit, categoryId, workType, location, salaryFrom, salaryTo);
         return ResponseEntity.ok(jobOfferService.findAll(userId, paginationAndFilterWrapper));
     }
 
