@@ -31,7 +31,7 @@ class SkillRepositoryTests {
 
         entityManager.flush();
 
-        List<SkillEntity> results = skillRepository.findAllSkillsByAliasSearch("jav", 10, 0);
+        List<SkillEntity> results = skillRepository.findAllSkillsByAliasSearch("jav", null, 10, 0);
 
         assertEquals(1, results.size());
         assertEquals(java.getId(), results.get(0).getId());
@@ -45,7 +45,7 @@ class SkillRepositoryTests {
 
         entityManager.flush();
 
-        Integer count = skillRepository.countAllSkillsByAliasSearch("java");
+        Integer count = skillRepository.countAllSkillsByAliasSearch("java", null);
 
         assertEquals(1, count);
     }

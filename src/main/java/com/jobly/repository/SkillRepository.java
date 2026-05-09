@@ -15,17 +15,19 @@ public interface SkillRepository extends JpaRepository<SkillEntity, Long> {
             FROM SKILLS s
             JOIN SKILL_ALIASES sa ON sa.skill_id = s.id
             WHERE LOWER(sa.alias) LIKE LOWER(CONCAT('%', :value, '%'))
+              AND (:skillType IS NULL OR s.TYPE = :skillType)
             LIMIT :limit OFFSET :offset
         """,
     nativeQuery = true)
-    List<SkillEntity> findAllSkillsByAliasSearch(String value, int limit, int offset);
+    List<SkillEntity> findAllSkillsByAliasSearch(String value, String skillType, int limit, int offset);
 
     @Query(value = """
             SELECT COUNT(DISTINCT s.id)
             FROM SKILLS s
             JOIN SKILL_ALIASES sa ON sa.skill_id = s.id
             WHERE LOWER(sa.alias) LIKE LOWER(CONCAT('%', :value, '%'))
+              AND (:skillType IS NULL OR s.TYPE = :skillType)
         """,
     nativeQuery = true)
-    Integer countAllSkillsByAliasSearch(String value);
+    Integer countAllSkillsByAliasSearch(String value, String skillType);
 }

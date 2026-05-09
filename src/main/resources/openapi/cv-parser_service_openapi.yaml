@@ -31,6 +31,29 @@ paths:
         '500':
           description: Internal Server Error - An error occurred while processing the CV/Resume
 
+  /embed:
+    post:
+      summary: Generate Embeddings for skill
+      tags:
+        - CV Parser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmbeddingRequest'
+      responses:
+        '200':
+          description: Successfully generated embeddings for the CV/Resume
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmbeddingResponse'
+        '400':
+          description: Bad Request - Invalid file format or missing file
+        '500':
+          description: Internal Server Error - An error occurred while processing the CV/Resume
+
 components:
   schemas:
     CVParseRequest:
@@ -42,6 +65,28 @@ components:
           type: string
           format: binary
           description: The CV/Resume file to be parsed (PDF, DOCX, etc.)
+
+    EmbeddingRequest:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+
+    EmbeddingResponse:
+      type: object
+      required:
+        - description
+        - embedding
+      properties:
+        description:
+          type: string
+        embedding:
+          type: array
+          items:
+            type: number
+            format: float
 
     CvParseResponse:
       type: object

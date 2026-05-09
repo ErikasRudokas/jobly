@@ -58,6 +58,7 @@ rectangle "Jobly sistema" {
 
   package "Įgūdžių posistemis" {
     usecase "Ieškoti įgūdžių" as UC_SearchSkills
+    usecase "Valdyti įgūdį" as UC_ManageSkills
   }
 
   package "Naudotojų administravimo posistemis" {
@@ -97,8 +98,10 @@ SkillSeeker --> UC_DownloadCv
 Admin --> UC_ViewUsers
 Admin --> UC_ViewUserStatusHistory
 Admin --> UC_ViewCategories
+Admin --> UC_ManageSkills
 
 UC_UploadCv --> CvService : "Apdoroti CV"
+UC_ManageSkills --> CvService : "Apdoroti įgūdį"
 
 UC_FilterJobOffers .> UC_ViewJobOffers : <<extend>>
 UC_FilterJobOfferApplications .> UC_ViewJobOfferApplications : <<extend>>
