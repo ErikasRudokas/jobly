@@ -8,14 +8,19 @@ skinparam nodesep 10
 skinparam ranksep 50
 
 actor "Naudotojas, dirbantis su įgūdžiais" as SkillSeeker
+actor "Gyvenimo aprašymo \napdorojimo sistema" as CvService
+actor "Administratorius" as Admin
 
 rectangle "Jobly sistema" {
   package "Įgūdžių posistemis" {
     usecase "Ieškoti įgūdžių" as UC_SearchSkills
+    usecase "Valdyti įgūdį" as UC_ManageSkills
   }
 }
 
 SkillSeeker --> UC_SearchSkills
+Admin --> UC_ManageSkills
 
+UC_ManageSkills --> CvService : "Apdoroti įgūdį"
 
 @enduml

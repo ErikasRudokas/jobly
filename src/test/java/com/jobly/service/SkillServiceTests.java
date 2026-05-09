@@ -2,6 +2,7 @@ package com.jobly.service;
 
 import com.jobly.dao.SkillDao;
 import com.jobly.gen.model.SearchSkillsResponse;
+import com.jobly.gen.model.SkillType;
 import com.jobly.model.SkillEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,10 +35,10 @@ class SkillServiceTests {
         SkillEntity first = buildSkill(1L, "Java", new Float[]{1.0F, 0.0F});
         SkillEntity second = buildSkill(2L, "JavaScript", new Float[]{0.9F, 0.1F});
 
-        when(skillDao.searchSkills(search, offset, limit)).thenReturn(List.of(first, second));
-        when(skillDao.countSkillsBySearch(search)).thenReturn(2);
+        when(skillDao.searchSkills(search, SkillType.TECHNICAL, offset, limit)).thenReturn(List.of(first, second));
+        when(skillDao.countSkillsBySearch(search, SkillType.TECHNICAL)).thenReturn(2);
 
-        SearchSkillsResponse response = skillService.searchSkills(search, offset, limit);
+        SearchSkillsResponse response = skillService.searchSkills(search, SkillType.TECHNICAL, offset, limit);
 
         assertEquals(2, response.getTotal());
         assertNotNull(response.getSkills());
@@ -50,10 +51,10 @@ class SkillServiceTests {
     void searchSkills_returnsEmptyListWhenNoResults() {
         String search = "golang";
 
-        when(skillDao.searchSkills(search, null, null)).thenReturn(List.of());
-        when(skillDao.countSkillsBySearch(search)).thenReturn(0);
+        when(skillDao.searchSkills(search, null, null, null)).thenReturn(List.of());
+        when(skillDao.countSkillsBySearch(search, null)).thenReturn(0);
 
-        SearchSkillsResponse response = skillService.searchSkills(search, null, null);
+        SearchSkillsResponse response = skillService.searchSkills(search, null, null, null);
 
         assertEquals(0, response.getTotal());
         assertNotNull(response.getSkills());

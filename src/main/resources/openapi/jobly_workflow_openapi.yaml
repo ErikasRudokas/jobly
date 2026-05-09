@@ -472,6 +472,31 @@ paths:
             type: integer
             format: int32
           description: The numbers of items to return
+        - name: categoryId
+          in: query
+          schema:
+            type: integer
+          description: Filter by job category ID
+        - name: workType
+          in: query
+          schema:
+            $ref: '#/components/schemas/WorkType'
+          description: Filter by work type (ON_SITE, REMOTE, HYBRID)
+        - name: location
+          in: query
+          schema:
+            type: string
+          description: Free-text location filter (e.g. city or country name)
+        - name: salaryFrom
+          in: query
+          schema:
+            type: integer
+          description: Minimum salary filter
+        - name: salaryTo
+          in: query
+          schema:
+            type: integer
+          description: Maximum salary filter
       operationId: getAllJobOffers
       responses:
         '200':
@@ -998,6 +1023,11 @@ paths:
           schema:
             type: string
           description: The search term for skill names
+        - name: skillType
+          in: query
+          schema:
+            $ref: '#/components/schemas/SkillType'
+          description: Optional filter by skill type
         - name: offset
           in: query
           schema:
@@ -1023,6 +1053,135 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /skills/{id}:
+    get:
+      summary: Get skill by ID
+      tags:
+        - Skills
+      operationId: getSkillById
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/SystemGeneratedId'
+          description: The ID of the skill to retrieve
+      responses:
+        '200':
+          description: Skill details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      summary: Update an existing skill
+      tags:
+        - Skills
+      operationId: updateSkill
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/SystemGeneratedId'
+          description: The ID of the skill to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkillUpdateRequest'
+      responses:
+        '200':
+          description: Skill updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: Delete skill by ID
+      tags:
+        - Skills
+      operationId: deleteSkillById
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/SystemGeneratedId'
+          description: The ID of the skill to delete
+      responses:
+        '204':
+          description: Skill deleted successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /skills/create:
+    post:
+      summary: Create a new skill
+      tags:
+        - Skills
+      operationId: createSkill
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkillCreateRequest'
+      responses:
+        '201':
+          description: Skill created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -1279,7 +1438,7 @@ components:
           maxLength: 32
         role:
           type: string
-          enum: [USER, EMPLOYER]
+          enum: [ USER, EMPLOYER ]
           example: USER
         email:
           type: string
@@ -1631,15 +1790,15 @@ components:
           example: 2
 
     JobOfferApplicationsResponse:
-        type: object
-        properties:
-            totalApplications:
-              type: integer
-              example: 3
-            applications:
-              type: array
-              items:
-                $ref: '#/components/schemas/ApplicationWithSkillMatch'
+      type: object
+      properties:
+        totalApplications:
+          type: integer
+          example: 3
+        applications:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationWithSkillMatch'
 
     JobOfferDetailsResponse:
       type: object
@@ -1905,7 +2064,7 @@ components:
 
     ApplicationRestrictionReason:
       type: string
-      enum: [ ALREADY_APPLIED, SKILL_OR_CV_MISSING, SKILLS_NOT_VERIFIED, OTHER]
+      enum: [ ALREADY_APPLIED, SKILL_OR_CV_MISSING, SKILLS_NOT_VERIFIED, OTHER ]
 
     SkillType:
       type: string
@@ -2242,3 +2401,98 @@ components:
     AdminUserRole:
       type: string
       enum: [ USER, EMPLOYER ]
+
+    Skill:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        name:
+          type: string
+          example: Java Programming
+          maxLength: 50
+        description:
+          type: string
+          example: A programming language used for building applications.
+          maxLength: 255
+        type:
+          $ref: '#/components/schemas/SkillType'
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/SkillAliasGetResponse'
+
+    SkillAliasGetResponse:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        value:
+          type: string
+          example: Java Dev
+          maxLength: 50
+
+    SkillCreateRequest:
+      type: object
+      required:
+        - name
+        - description
+        - type
+      properties:
+        name:
+          type: string
+          example: Java Programming
+          maxLength: 50
+        description:
+          type: string
+          example: A programming language used for building applications.
+          maxLength: 255
+        type:
+          $ref: '#/components/schemas/SkillType'
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/SkillAliasCreateRequest'
+
+    SkillAliasCreateRequest:
+      type: object
+      properties:
+        value:
+          type: string
+          example: Java Dev
+          maxLength: 50
+
+    SkillUpdateRequest:
+      type: object
+      required:
+        - name
+        - description
+        - type
+      properties:
+        name:
+          type: string
+          example: Java Programming
+          maxLength: 50
+        description:
+          type: string
+          example: A programming language used for building applications.
+          maxLength: 255
+        type:
+          $ref: '#/components/schemas/SkillType'
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/SkillAliasUpdateRequest'
+
+    SkillAliasUpdateRequest:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SystemGeneratedId'
+        value:
+          type: string
+          example: Java Dev
+          maxLength: 50
+        delete:
+          type: boolean
+          example: false

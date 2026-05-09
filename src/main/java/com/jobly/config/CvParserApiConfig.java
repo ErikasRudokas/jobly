@@ -2,10 +2,7 @@ package com.jobly.config;
 
 import com.jobly.gen.api.ApiClient;
 import com.jobly.gen.api.parser.CvParserApi;
-import com.jobly.gen.api.parser.data.CvParseResponse;
-import com.jobly.gen.api.parser.data.Education;
-import com.jobly.gen.api.parser.data.PersonalDetails;
-import com.jobly.gen.api.parser.data.WorkExperience;
+import com.jobly.gen.api.parser.data.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +27,11 @@ public class CvParserApiConfig {
                 mockResponse.setWorkExperience(generateWorkExperience());
                 mockResponse.setSkills(generateRawSkills());
                 return Mono.just(mockResponse);
+            }
+
+            @Override
+            public Mono<EmbeddingResponse> embedPost(EmbeddingRequest embeddingRequest) {
+                return Mono.just(new EmbeddingResponse());
             }
         };
     }

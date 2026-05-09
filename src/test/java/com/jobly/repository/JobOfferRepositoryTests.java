@@ -33,7 +33,7 @@ class JobOfferRepositoryTests {
 
         entityManager.flush();
 
-        List<JobOfferEntity> results = jobOfferRepository.findAllWithFilter("backend", 10, 0);
+        List<JobOfferEntity> results = jobOfferRepository.findAllWithFilter("backend", null, null, null, null, null, 10, 0);
 
         assertEquals(1, results.size());
         assertEquals("Backend Developer", results.get(0).getTitle());
@@ -47,7 +47,7 @@ class JobOfferRepositoryTests {
 
         entityManager.flush();
 
-        Integer count = jobOfferRepository.countAllWithFilter("backend");
+        Integer count = jobOfferRepository.countAllWithFilter("backend", null, null, null, null, null);
 
         assertEquals(2, count);
     }

@@ -24,7 +24,6 @@ public class CategoryService {
         return CategoryMapper.toCategory(categoryDao.findById(id));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EMPLOYER')")
     public GetAllCategoriesResponse findAll() {
         var categories = categoryDao.findAll()
                 .stream()
