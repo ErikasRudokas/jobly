@@ -213,5 +213,5 @@ INSERT INTO SKILL_ALIASES (SKILL_ID, ALIAS) VALUES
     (155, 'collaboration'),
     (156, 'ownership');
 
---SELECT setval('skill_aliases_id_seq', (SELECT MAX(id) FROM skill_aliases));
-ALTER TABLE SKILL_ALIASES ALTER COLUMN ID RESTART WITH 1000;
+SELECT setval('skill_aliases_id_seq', (SELECT MAX(id) FROM skill_aliases));
+--ALTER TABLE SKILL_ALIASES ALTER COLUMN ID RESTART WITH 1000;
